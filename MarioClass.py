@@ -11,6 +11,9 @@ class Direction(Enum):
     JUMP = 5
     Circle = 6
 
+WINDOW_SIZE_WIDTH = 800
+WINDOW_SIZE_HEIGHT = 600
+
 
 
 
@@ -23,6 +26,8 @@ class Mario:
         self.image_HEIGHT = 98
 
         self.direction = Direction.RIGHT
+        self.jumpdirection = Direction.UP
+
         self.x, self.y = random.randint(50,400), 90
         self.dst = 1
         self.frame, self.frame_dst = 0, 1
@@ -35,7 +40,8 @@ class Mario:
 
         self.jumpTime = 0.0
         self.jumpHeight = 0.0
-        self.jumpPower = 40.0
+        self.jumpPower = 50.0  # 이 값을 높이면 더 높이 점프 할 수 있습니다.
+        self.jumpSpeed = 4.0   # 이 값을 높이면 점프하는 속도가 빨라집니다..
 
         self.Velocity = 0.0
         self.Gravity = 400.0
@@ -44,10 +50,12 @@ class Mario:
 
     def Jump(self):
         self.jumpHeight = (self.jumpTime * self.jumpTime - self.jumpPower * self.jumpTime) / 4.0
-        self.jumpTime += 4.5
-        # print(self.jumpHeight)
-
+        self.jumpTime += self.jumpSpeed
+        # 마리오 : 점프에 따른 y값 조정 
         self.y = self.posY + self.jumpHeight * -1
+
+        if self.jumpTime >= self.jumpPower / 2:
+            self.jumpdirection = Direction.DOWN
 
         print(self.jumpTime , '  ',  self.jumpPower)
 
@@ -56,34 +64,24 @@ class Mario:
             self.jumpHeight = 0
             self.isJump = False
             self.y = 90
+            self.jumpdirection = Direction.UP
 
         # if self.jumpTime > self.jumpPower:
         #     self.jumpTime = 0
         #     self.jumpHeight = 0
         #     self.isJump = False
 
-
-    def Jump2(self):
-
-        self.y = self.y + self.jumpHeight * 1
-
-        if self.Velocity >= 300.0:
-            self.Velocity = 300.0
-            self.isJump = False
-            self.jumpHeight = 0
-
-        self.jumpHeight += self.Velocity * 0.0004
-        self.Velocity += self.Gravity * 0.0004
-
     def update(self):
+        # 점프 상태일 경우 점프 모드
         if self.isJump == True:
              self.Jump()
 
-        self.x +=( 5  *self.dst)
-        if self.x >= 800:
-            self.x = 800
-        elif self.x <= 0:
-            self.x = 0
+        # 화면 좌/우 이동 범위 설정
+        self.x +=( 8 *self.dst)
+        if self.x >= WINDOW_SIZE_WIDTH - 50:
+            self.x = WINDOW_SIZE_WIDTH - 50
+        elif self.x <= 0 + 50:
+            self.x = 0 + 50
 
         self.frame = (self.frame + 1) % 3
 
@@ -103,10 +101,27 @@ class Mario:
 
 
     def draw(self):
-        # self.image_Mario2.
-        if self.direction == Direction.RIGHT:
+        # 마리오 : 오른쪽 / 점프 / 위로
+        if self.isJump == True and self.direction == Direction.RIGHT and self.jumpdirection == Direction.UP:
+            self.image_right.clip_draw(0, self.image_HEIGHT * 2,
+                                       self.image_WIDTH, self.image_HEIGHT + 5, self.x, self.y, 100 , 98)
+        # 마리오 : 오른쪽 / 점프 / 아래로
+        elif self.isJump == True and self.direction == Direction.RIGHT and self.jumpdirection == Direction.DOWN:
+            self.image_right.clip_draw(self.image_WIDTH, self.image_HEIGHT * 2,
+                                       self.image_WIDTH, self.image_HEIGHT + 5, self.x, self.y, 100, 98)
+        # 마리오 : 왼쪽 / 점프 / 위로
+        elif self.isJump == True and self.direction == Direction.LEFT and self.jumpdirection == Direction.DOWN:
+            self.image_left.clip_draw(self.image_WIDTH * 3, self.image_HEIGHT * 2,
+                                      self.image_WIDTH, self.image_HEIGHT + 5, self.x, self.y, 100, 98)
+        # 마리오 : 왼쪽 / 점프 / 아래로
+        elif self.isJump == True and self.direction == Direction.LEFT and self.jumpdirection == Direction.UP:
+            self.image_left.clip_draw(self.image_WIDTH * 4 , self.image_HEIGHT * 2,
+                                       self.image_WIDTH, self.image_HEIGHT + 5, self.x, self.y, 100, 98)
+        # 마리오 : 오른쪽 / 이동
+        elif self.direction == Direction.RIGHT:
             self.image_right.clip_draw(self.frame * self.image_WIDTH, self.image_HEIGHT,
                                         self.image_WIDTH, self.image_HEIGHT, self.x , self.y, 100, 98)
-        if self.direction == Direction.LEFT:
+        # 마리오 : 왼쪽 / 이동
+        elif self.direction == Direction.LEFT:
             self.image_left.clip_draw(200 + self.frame * self.image_WIDTH, self.image_HEIGHT,
                                        self.image_WIDTH, self.image_HEIGHT, self.x, self.y, 100, 98)
