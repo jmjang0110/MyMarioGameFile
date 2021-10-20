@@ -17,6 +17,12 @@ def handle_events():
             mario1.ChangeDirection(Direction.RIGHT)
         elif event.type == SDL_KEYDOWN and event.key == SDLK_LEFT:
             mario1.ChangeDirection(Direction.LEFT)
+        elif event.type == SDL_KEYDOWN and event.key == SDLK_SPACE:
+            mario1.isJump = True
+            mario1.posY = mario1.y
+
+
+
 
 
 
