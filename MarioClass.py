@@ -1,18 +1,6 @@
 from pico2d import *
-from enum import Enum
+from myEnum import *
 import random
-
-class Direction(Enum):
-    STOP = 0
-    UP = 1
-    DOWN = 2
-    LEFT = 3
-    RIGHT = 4
-    JUMP = 5
-    Circle = 6
-
-WINDOW_SIZE_WIDTH = 800
-WINDOW_SIZE_HEIGHT = 600
 
 
 class Mario:
@@ -23,15 +11,18 @@ class Mario:
         self.image_WIDTH = 100
         self.image_HEIGHT = 98
 
-        self.direction = Direction.RIGHT
+        self.direction = Direction.STOP
+        self.Before_direction = Direction.RIGHT
         self.jumpdirection = Direction.UP
 
         self.x, self.y = random.randint(50,400), 120
+        self.Speed = 8.0
         self.dst = 1
         self.frame, self.frame_dst = 0, 1
 
         # 점프를 위한 변수
         self.isJump = False
+        self.Stop_After_Jump = False # true 라면 점프한 후에 멈춥니다.
         self.jumpX = 10.0
         self.jumpY = 120.0
         self.diameter = 10.0
@@ -52,7 +43,7 @@ class Mario:
         if self.jumpTime >= self.jumpPower / 5 * 4:
             self.jumpdirection = Direction.DOWN
 
-        print(self.jumpTime , '  ',  self.jumpPower)
+        # print(self.jumpTime, '  ',  self.jumpPower)
 
         if self.y < 120:
             self.jumpTime = 0
@@ -61,10 +52,18 @@ class Mario:
             self.y = 120
             self.jumpdirection = Direction.UP
 
+            if self.Stop_After_Jump == True:
+                self.direction = Direction.STOP
+                self.Stop_After_Jump = False
+
         # if self.jumpTime > self.jumpPower:
         #     self.jumpTime = 0
         #     self.jumpHeight = 0
         #     self.isJump = False
+
+    def UpdateStop_After_Jump(self, stopORgo):
+        self.Stop_After_Jump = stopORgo
+
 
     def update(self):
         # 점프 상태일 경우 점프 모드
@@ -72,7 +71,9 @@ class Mario:
              self.Jump()
 
         # 화면 좌/우 이동 범위 설정
-        self.x +=( 8 *self.dst)
+        if self.direction != Direction.STOP:
+            self.x +=(self.Speed * self.dst)
+
         if self.x >= WINDOW_SIZE_WIDTH - 50:
             self.x = WINDOW_SIZE_WIDTH - 50
         elif self.x <= 0 + 50:
@@ -93,7 +94,9 @@ class Mario:
         elif self.direction == Direction.LEFT:
             self.dst = -1
 
-
+    def Save_Before_Direction(self):
+        #  점프 하기 이전 방향이 오른쪽이 었는지 왼쪽이었는지 업데이트 합니다.
+        self.Before_direction = self.direction
 
     def draw(self):
 
@@ -124,3 +127,17 @@ class Mario:
         elif self.direction == Direction.LEFT:
             self.image_left.clip_draw(200 + self.frame * self.image_WIDTH, self.image_HEIGHT,
                                        self.image_WIDTH, self.image_HEIGHT, self.x, self.y, 100, 98)
+
+        # 마리오 : 왼쪽 / 점프 / 위로
+        elif self.isJump == True and self.direction == Direction.STOP and self.jumpdirection == Direction.DOWN:
+            self.image_left.clip_draw(self.image_WIDTH * 3, self.image_HEIGHT * 2,
+                                      self.image_WIDTH, self.image_HEIGHT + 5, self.x, self.y, 100, 98)
+        # 마리오 : 왼쪽 / 점프 / 아래로
+        elif self.isJump == True and self.direction == Direction.STOP and self.jumpdirection == Direction.UP:
+            self.image_left.clip_draw(self.image_WIDTH * 4, self.image_HEIGHT * 2,
+                                      self.image_WIDTH, self.image_HEIGHT + 5, self.x, self.y, 100, 98)
+        # 마리오 : 멈춤 /
+        elif self.direction == Direction.STOP and self.Before_direction == Direction.LEFT:
+            self.image_left.clip_draw(400, 300, self.image_WIDTH, self.image_HEIGHT, self.x, self.y, 100, 98)
+        elif self.direction == Direction.STOP and self.Before_direction == Direction.RIGHT:
+            self.image_right.clip_draw(0, 300, self.image_WIDTH, self.image_HEIGHT, self.x, self.y, 100, 98)
