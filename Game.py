@@ -1,6 +1,7 @@
 from pico2d import *
 import random
 import math
+from myEnum import *
 from MarioClass import *
 from Monster1 import *
 
@@ -40,15 +41,7 @@ def handle_events():
             elif mario1.isJump == True:
                 mario1.UpdateStop_After_Jump(True)
 
-
-
-
-
-
-
-
-open_canvas()
-
+open_canvas(WINDOW_SIZE_WIDTH, WINDOW_SIZE_HEIGHT)
 
 running = True
 mario1 = Mario()

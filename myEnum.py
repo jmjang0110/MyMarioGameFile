@@ -10,5 +10,5 @@ class Direction(Enum):
     JUMP = 5
     Circle = 6
 
-WINDOW_SIZE_WIDTH = 800
+WINDOW_SIZE_WIDTH = 1000
 WINDOW_SIZE_HEIGHT = 600

@@ -40,14 +40,21 @@ class Mario:
         # 마리오 : 점프에 따른 y값 조정
         self.y = self.posY + self.jumpHeight * -1
 
+        print(self.jumpHeight)
+
+        # 만약에 점프하다가 벽에 부딪 쳤다면 self.jumpTime = self.jumpPower 을 하면 내려가게 됩니다.. 근데 빠르게 내려가네..?
+        # if self.y + 1 >= 200:
+        #     self.jumpTime = self.jumpPower
+
         if self.jumpTime >= self.jumpPower / 5 * 4:
             self.jumpdirection = Direction.DOWN
+            print('y : ', self.y, ' jumptime : ', self.jumpTime , 'jumpPower : ',self.jumpPower)
 
         # print(self.jumpTime, '  ',  self.jumpPower)
 
         if self.y < 120:
             self.jumpTime = 0
-            self.jumpHeight = 0
+            self.jumpHeight = 0.0
             self.isJump = False
             self.y = 120
             self.jumpdirection = Direction.UP
@@ -101,7 +108,7 @@ class Mario:
     def draw(self):
 
         # 배경화면 그리기 ( 테스트 입니다.. )
-        self.BackGround_forTest.clip_draw(0,0,600,385,400,300,WINDOW_SIZE_WIDTH,WINDOW_SIZE_HEIGHT)
+        self.BackGround_forTest.clip_draw(0,0,600,385,WINDOW_SIZE_WIDTH / 2,WINDOW_SIZE_HEIGHT / 2,WINDOW_SIZE_WIDTH,WINDOW_SIZE_HEIGHT)
 
         # 마리오 : 오른쪽 / 점프 / 위로
         if self.isJump == True and self.direction == Direction.RIGHT and self.jumpdirection == Direction.UP:
