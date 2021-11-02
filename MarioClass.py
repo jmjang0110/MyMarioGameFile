@@ -44,7 +44,7 @@ class Mario:
 
         # 만약에 점프하다가 벽에 부딪 쳤다면 self.jumpTime = self.jumpPower 을 하면 내려가게 됩니다.. 근데 빠르게 내려가네..?
         # if self.y + 1 >= 200:
-        #     self.jumpTime = self.jumpPower
+        #     self.jumpTime = self.jumpPower - self.jumpSpeed
 
         if self.jumpTime >= self.jumpPower / 5 * 4:
             self.jumpdirection = Direction.DOWN
@@ -105,10 +105,14 @@ class Mario:
         #  점프 하기 이전 방향이 오른쪽이 었는지 왼쪽이었는지 업데이트 합니다.
         self.Before_direction = self.direction
 
+    def drawBackGround(self, Dst_x , Dst_y ): # 움직인 거리
+        # 배경화면 그리기 ( 테스트 입니다.. )
+        self.BackGround_forTest.clip_draw(0,0,600,385,WINDOW_SIZE_WIDTH / 2 - Dst_x ,WINDOW_SIZE_HEIGHT / 2 - Dst_y
+                                          ,WINDOW_SIZE_WIDTH,WINDOW_SIZE_HEIGHT)
+
+
     def draw(self):
 
-        # 배경화면 그리기 ( 테스트 입니다.. )
-        self.BackGround_forTest.clip_draw(0,0,600,385,WINDOW_SIZE_WIDTH / 2,WINDOW_SIZE_HEIGHT / 2,WINDOW_SIZE_WIDTH,WINDOW_SIZE_HEIGHT)
 
         # 마리오 : 오른쪽 / 점프 / 위로
         if self.isJump == True and self.direction == Direction.RIGHT and self.jumpdirection == Direction.UP:
