@@ -4,6 +4,7 @@ import math
 from myEnum import *
 from MarioClass import *
 from Monster1 import *
+from Monster2 import *
 from mapTileClass import *
 
 def handle_events():
@@ -46,6 +47,8 @@ open_canvas(WINDOW_SIZE_WIDTH, WINDOW_SIZE_HEIGHT)
 running = True
 mario1 = Mario()
 monster1 = Monster1()
+monster2 = Monster2()
+
 mapTiles = [MapTile() for i in range(30)]
 
 index = 0
@@ -66,6 +69,7 @@ while running :
 #     game Logic
     mario1.update()
     monster1.update()
+    monster2.update()
 
     # 맵 타일 움직이기 Test
     for tile in mapTiles:
@@ -76,6 +80,7 @@ while running :
     mario1.drawBackGround(BackTest, 0)
     mario1.draw()
     monster1.draw()
+    monster2.draw()
     BackTest += 1
 
 

@@ -10,5 +10,9 @@ class Direction(Enum):
     JUMP = 5
     Circle = 6
 
+class SIZE(Enum):
+    BIG = 0
+    SMALL = 1
+
 WINDOW_SIZE_WIDTH = 1000
 WINDOW_SIZE_HEIGHT = 600
