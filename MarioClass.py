@@ -5,7 +5,6 @@ import random
 
 class Mario:
     def __init__(self):
-        self.BackGround_forTest = load_image('Mario_BackGround_Test.png')
         self.image_right = load_image('mario_right.png')    # 500 x 588
         self.image_left = load_image('mario_left.png')
         self.image_WIDTH = 100
@@ -15,8 +14,11 @@ class Mario:
         self.Before_direction = Direction.RIGHT
         self.jumpdirection = Direction.UP
 
+
+        #  마리오 관련 상태변수
         self.x, self.y = random.randint(50,400), 120
-        self.Speed = 8.0
+        self.accumulate_dist = 0.0
+        self.Speed = 0.8
         self.dst = 1
         self.frame, self.frame_dst = 0, 1
         self.frame_Small, self.frame_Small_dst = 0, 1
@@ -31,7 +33,7 @@ class Mario:
         self.jumpTime = 0.0
         self.jumpHeight = 0.0
         self.jumpPower = 50.0  # 이 값을 높이면 더 높이 점프 할 수 있습니다.
-        self.jumpSpeed = 4.0   # 이 값을 높이면 점프하는 속도가 빨라집니다..
+        self.jumpSpeed = 0.5   # 이 값을 높이면 점프하는 속도가 빨라집니다..
         self.posY = 0.0        # 마리오 점프 시작 위치
 
 
@@ -80,7 +82,11 @@ class Mario:
 
         # 화면 좌/우 이동 범위 설정
         if self.direction != Direction.STOP:
-            self.x +=(self.Speed * self.dst)
+            self.x +=(self.Speed * self.dst)                # 마리오의 위치 이동
+            self.accumulate_dist +=(self.Speed * self.dst)  # 누적거리를 저장합니다.
+            if self.accumulate_dist >= WINDOW_SIZE_WIDTH:
+                self.accumulate_dist = 0.0
+
 
         if self.x >= WINDOW_SIZE_WIDTH - 50:
             self.x = WINDOW_SIZE_WIDTH - 50
@@ -113,10 +119,7 @@ class Mario:
         #  점프 하기 이전 방향이 오른쪽이 었는지 왼쪽이었는지 업데이트 합니다.
         self.Before_direction = self.direction
 
-    def drawBackGround(self, Dst_x , Dst_y ): # 움직인 거리
-        # 배경화면 그리기 ( 테스트 입니다.. )
-        self.BackGround_forTest.clip_draw(0,0,600,385,WINDOW_SIZE_WIDTH / 2 - Dst_x ,WINDOW_SIZE_HEIGHT / 2 - Dst_y
-                                          ,WINDOW_SIZE_WIDTH,WINDOW_SIZE_HEIGHT)
+
 
 
     def draw(self):
