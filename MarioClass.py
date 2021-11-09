@@ -16,9 +16,9 @@ class Mario:
 
 
         #  마리오 관련 상태변수
-        self.x, self.y = random.randint(50,400), 120
+        self.x, self.y = 50, 120
         self.accumulate_dist = 0.0
-        self.Speed = 0.8
+        self.Speed = 0.6
         self.dst = 1
         self.frame, self.frame_dst = 0, 1
         self.frame_Small, self.frame_Small_dst = 0, 1
@@ -33,7 +33,7 @@ class Mario:
         self.jumpTime = 0.0
         self.jumpHeight = 0.0
         self.jumpPower = 50.0  # 이 값을 높이면 더 높이 점프 할 수 있습니다.
-        self.jumpSpeed = 0.5   # 이 값을 높이면 점프하는 속도가 빨라집니다..
+        self.jumpSpeed = 0.4   # 이 값을 높이면 점프하는 속도가 빨라집니다..
         self.posY = 0.0        # 마리오 점프 시작 위치
 
 
@@ -83,7 +83,14 @@ class Mario:
         # 화면 좌/우 이동 범위 설정
         if self.direction != Direction.STOP:
             self.x +=(self.Speed * self.dst)                # 마리오의 위치 이동
+            if self.x <= 50:
+                self.x = 50
+
+
             self.accumulate_dist +=(self.Speed * self.dst)  # 누적거리를 저장합니다.
+            if self.x <= 50:
+                self.accumulate_dist = 0
+
             if self.accumulate_dist >= WINDOW_SIZE_WIDTH:
                 self.accumulate_dist = 0.0
 
