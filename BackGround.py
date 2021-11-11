@@ -29,16 +29,18 @@ class CBackGround:
 
 
 
-        print(self.BackGround_1_Pivot_x - self.BackMoveDist)
-        print(self.BackGround_2_Pivot_x - self.BackMoveDist)
-        print('\n')
+        # print(self.BackGround_1_Pivot_x - self.BackMoveDist)
+        # print(self.BackGround_2_Pivot_x - self.BackMoveDist)
+        # print('\n')
 
 
 
         pass
+    def update(self):
+        pass
 
     # 마리오의 움직임 누적거리를 받습니다.
-    def Update(self,accumulate_dist):
+    def Update_accumulate_Dist(self,accumulate_dist):
         self.BackMoveDist = accumulate_dist
 
         if self.BackMoveDist == 0.0 and self.BackGround_1_Pivot_x <= -(WINDOW_SIZE_WIDTH / 2):

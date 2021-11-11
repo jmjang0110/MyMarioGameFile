@@ -83,6 +83,8 @@ def quit():
     global running
     running = False
 
+import time
+frame_time = 0.0
 
 def run(start_state):
     global running, stack
@@ -90,11 +92,24 @@ def run(start_state):
     stack = [start_state] # start_state를 담고 있는 스택을 생성
     start_state.enter() # start_state.py 에서 enter()함수 호출 - image 초기화
 
+    global frame_time
+    # fill here
+    current_time = time.time()
+
     # stack의 top 에 있는 게임 상태 에 대한 게임 루프 진행
     while (running):
         stack[-1].handle_events()
         stack[-1].update()
         stack[-1].draw()
+
+        # fill here
+        frame_time = time.time() - current_time
+        frame_rate = 1.0 / frame_time
+        current_time += frame_time
+        print("Frame Time : %f sec , Frame Rate : %f fps " % (frame_time, frame_rate))
+
+
+
     # repeatedly delete the top of the stack
     while (len(stack) > 0):
         stack[-1].exit()

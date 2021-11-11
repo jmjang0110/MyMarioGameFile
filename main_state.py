@@ -3,12 +3,15 @@ import json
 import os
 
 from pico2d import *
-
 import game_framework
 import title_state
-from MarioClass import *
+import game_world
+
+
 from myEnum import *
+# from MarioClass import *
 from BackGround import *
+from MarioClass_Test import *
 
 
 name = "MainState"
@@ -22,14 +25,16 @@ def enter():
     mario = Mario()
     backGround = CBackGround()
 
+    game_world.add_object(backGround, 0)
+    game_world.add_object(mario, 1)
+
 
     pass
 
 
 def exit():
-    global Mario, grass
-    del(Mario)
-    del(grass)
+    game_world.clear()
+
 
     pass
 
@@ -50,45 +55,25 @@ def handle_events():
             game_framework.quit()
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
             game_framework.change_state(title_state)
-
-        #     움직임
-        elif event.type == SDL_KEYDOWN and event.key == SDLK_RIGHT:
-            mario.ChangeDirection(Direction.RIGHT)
-        elif event.type == SDL_KEYDOWN and event.key == SDLK_LEFT:
-            mario.ChangeDirection(Direction.LEFT)
-        #     점프
-        elif event.type == SDL_KEYDOWN and event.key == SDLK_SPACE:
-            mario.isJump = True
-            mario.posY = mario.y
+        else:
+            mario.handle_event(event)
 
 
-        #     키를 올렸을 때
-        elif event.type == SDL_KEYUP and event.key != SDLK_SPACE:
-            # 마리오가 점프하기 이전 방향을 저장합니다.
-            mario.Save_Before_Direction()
-
-            if mario.isJump == False:
-                mario.direction = Direction.STOP
-            elif mario.isJump == True:
-                mario.UpdateStop_After_Jump(True)
     pass
 
 
 def update():
-    mario.update()
-    backGround.Update(mario.accumulate_dist)
-
+    for game_object in game_world.all_objects():
+        game_object.update()
+    backGround.Update_accumulate_Dist(mario.accumulate_dist)
 
     pass
 
 
 def draw():
     clear_canvas()
-
-
-    backGround.draw()
-    mario.draw()
-
+    for game_object in game_world.all_objects():
+        game_object.draw()
 
     update_canvas()
 

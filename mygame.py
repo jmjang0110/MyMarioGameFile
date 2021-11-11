@@ -12,6 +12,4 @@ game_framework.run(title_state)
 
 pico2d.close_canvas()
 
-
-
 # fill here
