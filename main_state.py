@@ -11,21 +11,58 @@ import game_world
 from myEnum import *
 # from MarioClass import *
 from BackGround import *
-from MarioClass_Test import *
+from MarioClass import *
+from Monster1 import *
+from Monster2 import *
+from Monster3 import *
+from Monster4 import *
+
+from MapManager import *
+
+
+from mapTileClass import *
+
+
 
 
 name = "MainState"
 
 mario = None
 backGround = None
+monster1 = None
+monster2 = None
+monster3 = None
+monster4 = None
 font = None
+
+
+mapManager = None
+maptile1 = None
+
 
 def enter():
     global mario, backGround
+
     mario = Mario()
     backGround = CBackGround()
+    monster1 = Monster1()
+    monster2 = Monster2()
+    monster3 = Monster3()
+    monster4 = Monster4()
+    maptile1 = MapTile()
+
+    mapManager = MapTileManager()
+    mapManager.create_TileMap_byHand()
+    mapManager.create_tileSpot()
+
 
     game_world.add_object(backGround, 0)
+    game_world.add_object(mapManager, 0)
+
+    game_world.add_object(monster1, 1)
+    game_world.add_object(monster2, 1)
+    game_world.add_object(monster3, 1)
+    game_world.add_object(monster4, 1)
     game_world.add_object(mario, 1)
 
 

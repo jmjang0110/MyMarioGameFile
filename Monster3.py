@@ -21,12 +21,12 @@ TIME_PER_ACTION = 0.5 # 0.5초 정도 걸릴 것이다.
 ACTION_PER_TIME = 1.0 / TIME_PER_ACTION # 초당 2번 역수이므로
 FRAMES_PER_ACTION = 8 # 8장 프레임
 
-class Monster1:
+class Monster3:
     image = None
 
     def __init__(self):
-        if Monster1.image == None:
-            Monster1.image = load_image('m_Monster1.png')
+        if Monster3.image == None:
+            Monster3.image = load_image('m_Monster3.png')
 
         self.x = random.randint(10, 200)
         self.y = 120
@@ -35,7 +35,7 @@ class Monster1:
         self.dir = 0
         self.velocity = RUN_SPEED_PPS
 
-        self.width = 62
+        self.width = 30
         self.height = 40
 
         self.dir = clamp(-1, self.velocity, 1)
@@ -57,12 +57,12 @@ class Monster1:
 
         pass
     def draw(self):
-        if self.velocity <= -1:
-            self.image.clip_draw(int(self.frame)  * 62, 0, self.width ,self.height,
-                    self.x, self.y)
+        if self.velocity >= 1:
+            self.image.clip_draw(int(self.frame)  * 30, 0, self.width ,self.height,
+                    self.x, self.y, 50,60)
         else:
-            self.image.clip_composite_draw(int(self.frame) * 62, 0, self.width, self.height,\
-                0 , 'h', self.x, self.y, self.width, self.height)
+            self.image.clip_composite_draw(int(self.frame) * 30, 0, self.width, self.height,\
+                0 , 'h', self.x, self.y, 50,60)
 
 
 

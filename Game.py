@@ -77,7 +77,7 @@ while running :
 
 
 #     game Rendering
-    mario1.drawBackGround(BackTest, 0)
+#     mario1.drawBackGround(BackTest, 0)
     mario1.draw()
     monster1.draw()
     monster2.draw()

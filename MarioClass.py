@@ -356,7 +356,8 @@ next_state_table = {
 
     SleepState: {LEFT_DOWN: RunState, RIGHT_DOWN: RunState,
                  LEFT_UP: IdleState, RIGHT_UP: IdleState,
-                 DASH_DOWN: SleepState, DASH_UP : SleepState},
+                 DASH_DOWN: SleepState, DASH_UP : SleepState,
+                 JUMP_UP: JumpState},
 
     # cur_state : { event   : 들어갈 상태 }
     DashState: { DASH_DOWN: DashState, DASH_UP: RunState,
@@ -387,7 +388,8 @@ class Mario:
 
 
         #  마리오 관련 상태변수
-        self.x, self.y = 50, 120
+        self.Start_y = 150
+        self.x, self.y = 50, 150
         self.timer = 0
         self.accumulate_dist = 0.0
         self.velocity = 0.0
@@ -401,7 +403,7 @@ class Mario:
         self.isJump = False
         self.Stop_After_Jump = False # true 라면 점프한 후에 멈춥니다.
         self.jumpX = 10.0
-        self.jumpY = 120.0
+        self.jumpY = self.Start_y
         self.diameter = 10.0
 
         self.jumpTime = 0.0
@@ -476,7 +478,7 @@ class Mario:
 
         # print(self.jumpTime, '  ',  self.jumpPower)
 
-        if self.y < 120:
+        if self.y < self.Start_y:
             # self.add_event(key_event_table[self.Before_Key_event.type, self.Before_Key_event.key])
             self.add_event(JUMP_TIMER)
             self.cur_state = self.Before_State
@@ -484,7 +486,7 @@ class Mario:
             self.jumpTime = 0
             self.jumpHeight = 0.0
             self.isJump = False
-            self.y = 120
+            self.y = self.Start_y
             self.jumpdirection = Direction.UP
 
             if self.Stop_After_Jump == True:
