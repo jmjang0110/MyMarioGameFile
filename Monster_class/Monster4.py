@@ -26,7 +26,7 @@ class Monster4:
 
     def __init__(self):
         if Monster4.image == None:
-            Monster4.image = load_image('m_Monster4.png')
+            Monster4.image = load_image('mario_monster/m_Monster4.png')
 
         self.x = random.randint(10, 200)
         self.y = 120

@@ -4,7 +4,7 @@ import os
 
 from pico2d import *
 import game_framework
-import title_state
+import state_class.title_state
 import game_world
 
 
@@ -12,10 +12,14 @@ from myEnum import *
 # from MarioClass import *
 from BackGround import *
 from MarioClass import *
-from Monster1 import *
-from Monster2 import *
-from Monster3 import *
-from Monster4 import *
+from Monster_class.Monster1 import *
+from Monster_class.Monster2 import *
+from Monster_class.Monster3 import *
+from Monster_class.Monster4 import *
+
+# from Monster2 import *
+# from Monster3 import *
+# from Monster4 import *
 
 from MapManager import *
 

@@ -1,6 +1,8 @@
 import game_framework
+from myEnum import *
 from pico2d import *
-import main_state
+import state_class.main_state
+
 
 
 name = "TitleState"
@@ -30,7 +32,7 @@ def handle_events():
             if (event.type, event.key) == (SDL_KEYDOWN, SDLK_ESCAPE):
                 game_framework.quit()
             elif (event.type, event.key) == (SDL_KEYDOWN, SDLK_SPACE):
-                game_framework.change_state(main_state)
+                game_framework.change_state(state_class.main_state)
 
 
     pass
@@ -38,7 +40,7 @@ def handle_events():
 
 def draw():
     clear_canvas()
-    image.draw(400, 300)
+    image.draw(WINDOW_SIZE_WIDTH // 2, WINDOW_SIZE_HEIGHT // 2, WINDOW_SIZE_WIDTH, WINDOW_SIZE_HEIGHT)
     update_canvas()
 
     pass

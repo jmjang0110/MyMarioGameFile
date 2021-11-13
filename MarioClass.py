@@ -373,8 +373,8 @@ next_state_table = {
 
 class Mario:
     def __init__(self):
-        self.image_right = load_image('mario_right.png')    # 500 x 588
-        self.image_left = load_image('mario_left.png')
+        self.image_right = load_image('mario_mainCharacter/mario_right.png')    # 500 x 588
+        self.image_left = load_image('mario_mainCharacter/mario_left.png')
         self.image_WIDTH = 100
         self.image_HEIGHT = 98
 

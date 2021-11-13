@@ -8,7 +8,7 @@ class MapTile:
 
     def __init__(self):
         if MapTile.mapTileImage == None:
-            MapTile.mapTileImage = load_image('m_MapTileBrown.jpg')
+            MapTile.mapTileImage = load_image('mario_map_tile/m_MapTileBrown.jpg')
 
         self.image_WIDTH = 16
         self.image_HEIGHT = 14
