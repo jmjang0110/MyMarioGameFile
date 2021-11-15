@@ -21,10 +21,10 @@ class CBackGround:
 
 
     def draw(self):
-        self.BackGround_1.clip_draw(0, 0, 600, 385, self.BackGround_1_Pivot_x - self.BackMoveDist,
+        self.BackGround_1.clip_draw(0, 60, 600, 385, self.BackGround_1_Pivot_x - self.BackMoveDist,
                                           WINDOW_SIZE_HEIGHT / 2, WINDOW_SIZE_WIDTH, WINDOW_SIZE_HEIGHT)
 
-        self.BackGround_2.clip_draw(0, 0, 600, 385, self.BackGround_2_Pivot_x - self.BackMoveDist,
+        self.BackGround_2.clip_draw(0, 60, 600, 385, self.BackGround_2_Pivot_x - self.BackMoveDist,
                                           WINDOW_SIZE_HEIGHT / 2, WINDOW_SIZE_WIDTH, WINDOW_SIZE_HEIGHT)
 
 

@@ -3,6 +3,8 @@ from myEnum import *
 import random
 import game_framework
 import game_world
+from Fire import *
+
 
 # fill expressions correctly
 PIXEL_PER_METER = (10.0 / 0.3 ) # 10 pixel 30 cm
@@ -30,10 +32,10 @@ FRAMES_PER_ACTION = 8 # 8장 프레임
 
 # dictionary 를 이용한 키매핑
 RIGHT_DOWN, LEFT_DOWN, RIGHT_UP, LEFT_UP, SLEEP_TIMER, \
-    DASH_TIMER, DASH_DOWN, DASH_UP, JUMP_UP, JUMP_TIMER = range(10)
+    DASH_TIMER, DASH_DOWN, DASH_UP, JUMP_UP, JUMP_TIMER , ATTACK= range(11)
 
 event_name = ['RIGHT_DOWN', 'LEFT_DOWN', 'RIGHT_UP', 'LEFT_UP', 'SLEEP_TIMER', \
-    'DASH_TIMER', 'DASH_DOWN', 'DASH_UP' , 'JUMP_UP', 'JUMP_TIMER']
+    'DASH_TIMER', 'DASH_DOWN', 'DASH_UP' , 'JUMP_UP', 'JUMP_TIMER','SPACE']
 
 
 
@@ -51,7 +53,9 @@ key_event_table = {
     (SDL_KEYDOWN,SDLK_RSHIFT):DASH_DOWN,
     (SDL_KEYUP,SDLK_RSHIFT):DASH_UP,
 
-    (SDL_KEYDOWN, SDLK_SPACE) : JUMP_UP
+    (SDL_KEYDOWN, SDLK_SPACE) : JUMP_UP,
+    (SDL_KEYDOWN, SDLK_a) : ATTACK
+
 
 
 }
@@ -70,6 +74,9 @@ class IdleState:
         Mario.timer = 1000
 
     def exit(Mario, event):
+        if event == ATTACK:
+            Mario.fire()
+
         pass
 
     def do(Mario):
@@ -110,6 +117,8 @@ class RunState:
 
 
     def exit(Mario, event):
+        if event == ATTACK:
+            Mario.fire()
         pass
 
     def do(Mario):
@@ -143,6 +152,7 @@ class RunState:
 
         # boy.frame = (boy.frame + 1) % 8
         Mario.x += Mario.velocity * game_framework.frame_time
+        Mario.move_dist += Mario.velocity * game_framework.frame_time
 
         # 누적거리를 저장합니다.
         Mario.accumulate_dist += (Mario.velocity * game_framework.frame_time * Mario.dst)
@@ -215,6 +225,9 @@ class DashState:
             Mario.dst = -1
 
     def exit(Mario, event):
+        if event == ATTACK:
+            Mario.fire()
+
         pass
 
     def do(Mario):
@@ -244,6 +257,7 @@ class DashState:
 
         # boy.frame = (boy.frame + 1) % 8
         Mario.x += Mario.velocity * game_framework.frame_time
+        Mario.move_dist += Mario.velocity * game_framework.frame_time
 
         # 누적거리를 저장합니다.
         Mario.accumulate_dist += (Mario.velocity * game_framework.frame_time * Mario.dst)
@@ -312,6 +326,7 @@ class JumpState:
 
         Mario.timer -= 1
         Mario.x += Mario.velocity * game_framework.frame_time
+        Mario.move_dist += Mario.velocity * game_framework.frame_time
 
         # 누적거리를 저장합니다.
         Mario.accumulate_dist += (Mario.velocity * game_framework.frame_time * Mario.dst)
@@ -347,28 +362,29 @@ next_state_table = {
     IdleState: {RIGHT_UP: IdleState, LEFT_UP: IdleState,
                 RIGHT_DOWN: RunState, LEFT_DOWN: RunState,
                 SLEEP_TIMER: SleepState, DASH_DOWN: IdleState,
-                DASH_UP: IdleState,JUMP_UP: JumpState},
+                DASH_UP: IdleState,JUMP_UP: JumpState,
+                ATTACK : IdleState},
 
     RunState: {RIGHT_UP: IdleState, LEFT_UP: IdleState,
                LEFT_DOWN: RunState, RIGHT_DOWN: RunState,
                DASH_DOWN : DashState,DASH_UP: RunState,
-               JUMP_UP: JumpState},
+               JUMP_UP: JumpState,ATTACK : RunState},
 
     SleepState: {LEFT_DOWN: RunState, RIGHT_DOWN: RunState,
                  LEFT_UP: IdleState, RIGHT_UP: IdleState,
                  DASH_DOWN: SleepState, DASH_UP : SleepState,
-                 JUMP_UP: JumpState},
+                 JUMP_UP: JumpState,ATTACK : IdleState},
 
     # cur_state : { event   : 들어갈 상태 }
     DashState: { DASH_DOWN: DashState, DASH_UP: RunState,
                  RIGHT_UP: IdleState, LEFT_UP: IdleState,
                  LEFT_DOWN: RunState, RIGHT_DOWN: RunState,
-                 DASH_TIMER: RunState,JUMP_UP: JumpState},
+                 DASH_TIMER: RunState,JUMP_UP: JumpState,ATTACK : IdleState},
 
     JumpState: { DASH_DOWN: JumpState, DASH_UP: JumpState,
                  RIGHT_UP: JumpState, LEFT_UP: JumpState,
                  RIGHT_DOWN: JumpState, LEFT_DOWN: JumpState,
-                 JUMP_TIMER: RunState , JUMP_UP: JumpState}
+                 JUMP_TIMER: RunState , JUMP_UP: JumpState,ATTACK : IdleState}
 }
 
 class Mario:
@@ -392,6 +408,8 @@ class Mario:
         self.x, self.y = 50, 150
         self.timer = 0
         self.accumulate_dist = 0.0
+        self.move_dist = 0.0
+
         self.velocity = 0.0
         self.dst = 1
         self.frame, self.frame_dst = 0, 1
@@ -408,7 +426,7 @@ class Mario:
 
         self.jumpTime = 0.0
         self.jumpHeight = 0.0
-        self.jumpPower = 50.0  # 이 값을 높이면 더 높이 점프 할 수 있습니다.
+        self.jumpPower = 60.0  # 이 값을 높이면 더 높이 점프 할 수 있습니다.
         self.jumpSpeed = 100   # 이 값을 높이면 점프하는 속도가 빨라집니다..
         self.posY = 0.0        # 마리오 점프 시작 위치
 
@@ -442,6 +460,11 @@ class Mario:
 
         pass
 
+
+
+
+
+
     def handle_event(self, event):
         # fill here
         global Before_JumpState
@@ -449,7 +472,11 @@ class Mario:
             key_event = key_event_table[(event.type, event.key)]
             if key_event == JUMP_UP:
                 Before_JumpState = self.cur_state
+                print("Before : ", str(Before_JumpState))
+
+
             self.add_event(key_event)
+
 
         pass
 
@@ -512,5 +539,10 @@ class Mario:
 
     def UpdateStop_After_Jump(self, stopORgo):
         self.Stop_After_Jump = stopORgo
+
+    def fire(self):
+        fire = Fire(self.x, self.y, self.dst * 3)
+        game_world.add_object(fire,1)
+
 
 

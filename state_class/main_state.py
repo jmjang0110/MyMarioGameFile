@@ -17,16 +17,8 @@ from Monster_class.Monster2 import *
 from Monster_class.Monster3 import *
 from Monster_class.Monster4 import *
 
-# from Monster2 import *
-# from Monster3 import *
-# from Monster4 import *
-
 from MapManager import *
-
-
 from mapTileClass import *
-
-
 
 
 name = "MainState"
@@ -45,7 +37,7 @@ maptile1 = None
 
 
 def enter():
-    global mario, backGround
+    global mario, backGround,mapManager
 
     mario = Mario()
     backGround = CBackGround()
@@ -57,7 +49,7 @@ def enter():
 
     mapManager = MapTileManager()
     mapManager.create_TileMap_byHand()
-    mapManager.create_tileSpot()
+    mapManager.create_tileSpot2()
 
 
     game_world.add_object(backGround, 0)
@@ -95,7 +87,7 @@ def handle_events():
         if event.type == SDL_QUIT:
             game_framework.quit()
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
-            game_framework.change_state(title_state)
+            game_framework.change_state(state_class.title_state)
         else:
             mario.handle_event(event)
 
@@ -106,7 +98,9 @@ def handle_events():
 def update():
     for game_object in game_world.all_objects():
         game_object.update()
+
     backGround.Update_accumulate_Dist(mario.accumulate_dist)
+    mapManager.update_tileSpot_byMarioMove(mario.move_dist)
 
     pass
 

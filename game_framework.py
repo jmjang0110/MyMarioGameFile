@@ -106,7 +106,7 @@ def run(start_state):
         frame_time = time.time() - current_time
         frame_rate = 1.0 / frame_time
         current_time += frame_time
-        print("Frame Time : %f sec , Frame Rate : %f fps " % (frame_time, frame_rate))
+        # print("Frame Time : %f sec , Frame Rate : %f fps " % (frame_time, frame_rate))
 
 
 
