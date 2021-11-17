@@ -25,7 +25,7 @@ FRAMES_PER_ACTION = 2 # 8장 프레임
 
 class Monster6:
     image = None
-
+    FireData = []
     def __init__(self):
         if Monster6.image == None:
             Monster6.image = load_image('mario_monster/mario_monster_sheet.png')
@@ -68,6 +68,9 @@ class Monster6:
 
     def update_spot_byMarioMove(self, move_prev_dst):
         self.x -= move_prev_dst
+        for i in range(len(Monster6.FireData)):
+            Monster6.FireData[i].update_spot_byMarioMove(move_prev_dst)
+
 
 
     pass
@@ -78,6 +81,12 @@ class Monster6:
 
         self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME
                        * game_framework.frame_time) % 2
+
+        # for i in range(len(Monster6.FireData)):
+        #     if Monster6.FireData[i].check_remove() == True:
+        #         Monster6.FireData.remove(Monster6.FireData[i])
+
+
 
         self.fireTimer += FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time
         if self.fireTimer >= self.fireTimer_Limit:
@@ -111,7 +120,9 @@ class Monster6:
 
     pass
     def fire(self):
+
         mFire = MonsterFire(self.x, self.y, -1 * 3)
+        # Monster6.FireData.append(mFire)
         game_world.add_object(mFire, 1)
 
 

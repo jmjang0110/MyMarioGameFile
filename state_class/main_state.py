@@ -3,6 +3,8 @@ import json
 import os
 
 from pico2d import *
+
+import MapManager
 import game_framework
 import state_class.title_state
 import game_world
@@ -10,15 +12,15 @@ import game_world
 
 from myEnum import *
 # from MarioClass import *
-from BackGround import *
-from MarioClass import *
+from MapManagerFile.BackGround import *
+from Mario.MarioClass import *
 from Monster_class.Monster1 import *
 from Monster_class.Monster2 import *
 from Monster_class.Monster3 import *
 from Monster_class.Monster4 import *
 
-from MapManager import *
-from mapTileClass import *
+from MapManagerFile import *
+from MapManagerFile.mapTileClass import *
 from MonsterManager import *
 
 
@@ -63,14 +65,12 @@ def enter():
     monster4 = Monster4()
     maptile1 = MapTile()
 
-    mapManager = MapTileManager()
+    mapManager = MapManager.MapTileManager()
     mapManager.create_TileMap_byHand()
     mapManager.create_tileSpot2()
 
     monsterManager = CMonsterManager()
     monsterManager.create_Monster()
-
-
 
     game_world.add_object(backGround, 0)
     game_world.add_object(mapManager, 0)
@@ -124,9 +124,22 @@ def update():
 
     backGround.Update_accumulate_Dist(mario.accumulate_dist)
 
-    mapManager.update_tileSpot_byMarioMove(mario.move_prev_dst)
-    monsterManager.update_tileSpot_byMarioMove(mario.move_prev_dst)
+    mapManager.update_tileSpot_byMarioMove(mario.move_prev_dst * 1.5)
+    mapManager.update()
+
+    monsterManager.update_tileSpot_byMarioMove(mario.move_prev_dst * 1.5)
     mario.move_prev_dst = 0
+
+    # 아이템 박스와 충돌 체크
+    idx = 0
+    for num in MapManager.MapTileManager.MapData[2]:
+        # 아이템과 충돌 체크
+        if num == 3 or num == 5:
+            if collide(mario,MapManager.MapTileManager.mapTile_Data[2][idx]):
+                MapManager.MapTileManager.mapTile_Data[2][idx].collidenum -= 1
+                mario.jumpCollide_item()
+
+        idx += 1
 
     pass
 

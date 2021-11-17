@@ -46,6 +46,9 @@ class MonsterFire:
 
         self.DeleteTimer = 2.0
 
+    def update_spot_byMarioMove(self, move_prev_dst):
+        self.x -= move_prev_dst
+
     def get_bb(self):
         # fill here
         return self.x - self.image_Width // 2 + 2, self.y - self.image_Height // 2\
@@ -64,14 +67,17 @@ class MonsterFire:
 
         if self.DeleteTimer <= 0.0:
             game_world.remove_object(self)
-        # self.Jump(game_framework.frame_time)
         self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 4
-        # print(self.frame)
-        #
-        # # if self.x < 25 or self.x > 1600 - 25:
-        # #     game_world.remove_object(self)
-        # if self.jumpPower <= 3:
-        #     game_world.remove_object(self)
+        pass
+
+    def check_remove(self):
+       checkTimer = self.DeleteTimer
+
+       checkTimer -= 3 * game_framework.frame_time
+       if checkTimer <= 0.0:
+           return True
+       else:
+           return False
 
 
     def Jump(self,deltatime):

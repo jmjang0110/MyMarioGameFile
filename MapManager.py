@@ -5,8 +5,16 @@ import random
 import game_framework
 import game_world
 
-from mapTileClass import *
-from GreenSewer import *
+from MapManagerFile.mapTileClass import *
+from MapManagerFile.GreenSewer import *
+from MapManagerFile.itemclass import *
+from MapManagerFile.CastleClass import *
+from MapManagerFile.mountainClass import *
+
+
+
+
+
 
 mapTile_Prototype = None
 
@@ -38,20 +46,18 @@ class MapTileManager:
 
 
     def create_TileMap_byHand(self):
-        # MapData[0] = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-        # MapData[1] = [1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-        # MapData[2] = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-        # MapData[3] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        # MapData[4] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        # MapData[5] = [0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
+        # 2 층
         MapTileManager.MapData[1] = [0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 1,
                                      0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0]
 
-        MapTileManager.MapData[2] = [0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 2, 0, 0, 2, 0, 0, 2, 0, 0, 0, 0, 2, 0, 0, 0, 0, 2,
-                                     0, 0, 2, 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        # 중간 3 : 코인 , 2 : 초록 하수구
+        MapTileManager.MapData[2] = [0, 0, 3, 3, 3, 0, 0, 5, 5, 0, 0, 2, 0, 0, 5, 5, 0, 2, 0, 3, 3, 3, 0, 2, 0, 0, 0, 0,
+                                     0, 0, 2, 0, 3, 3, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+
+        # 1 층
         MapTileManager.MapData[0] = [1, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0,
-                                     1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 0, 0, 0, 0]
+                                     1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 0, 0, 4, 0]
 
         pass
 
@@ -64,6 +70,11 @@ class MapTileManager:
                 elif MapTileManager.MapData[i][j] == 2:
                     MapTileManager.mapTile_Data[i][j] = CGreenSewer()
 
+                elif MapTileManager.MapData[i][j] == 3:
+                    MapTileManager.mapTile_Data[i][j] = ItemClass()
+                elif MapTileManager.MapData[i][j] == 4:
+                    MapTileManager.mapTile_Data[i][j] = myCastle()
+
                 MapTileManager.mapTile_Data[i][j].setPivot(self.MapStart_x, self.MapStart_y, i, j)
 
 
@@ -75,23 +86,46 @@ class MapTileManager:
             for j in range(COLUM-1):
                 if MapTileManager.MapData[i][j] == 0:
                     self.pivot_x += 25
-                else:
+                elif MapTileManager.MapData[i][j] == 1:
                     self.pivot_x += 100 * MapTileManager.MapData[i][j]
+                elif MapTileManager.MapData[i][j] == 2:
+                    self.pivot_x += 100
+                elif MapTileManager.MapData[i][j] == 3:
+                    self.pivot_x += 50
+                elif MapTileManager.MapData[i][j] == 5:
+                    self.pivot_x += 25
 
                 if MapTileManager.MapData[i][j] == 1:
                     MapTileManager.mapTile_Data[i][j] = MapTile()
                     MapTileManager.mapTile_Data[i][j].setPivot2(self.pivot_x, self.pivot_y, 1)
+
                 elif MapTileManager.MapData[i][j] == 2:
                     MapTileManager.mapTile_Data[i][j] = CGreenSewer()
                     MapTileManager.mapTile_Data[i][j].setPivot2(self.pivot_x, self.pivot_y- 330, 1)
 
+                elif MapTileManager.MapData[i][j] == 3:
+                    MapTileManager.mapTile_Data[i][j] = ItemClass()
+                    MapTileManager.mapTile_Data[i][j].setPivot2(self.pivot_x, self.pivot_y- 150 - 50, 1)
 
+
+                elif MapTileManager.MapData[i][j] == 4:
+                    MapTileManager.mapTile_Data[i][j] = myCastle()
+                    MapTileManager.mapTile_Data[i][j].setPivot2(self.pivot_x, self.pivot_y + 165, 1)
+
+                elif MapTileManager.MapData[i][j] == 5:
+                    MapTileManager.mapTile_Data[i][j] = ItemClass()
+                    MapTileManager.mapTile_Data[i][j].setPivot2(self.pivot_x, self.pivot_y - 30, 1)
 
                 if MapTileManager.MapData[i][j] == 0:
                     self.pivot_x += 25
-                else:
+                elif MapTileManager.MapData[i][j] == 1:
                     self.pivot_x += 100 * MapTileManager.MapData[i][j]
-
+                elif MapTileManager.MapData[i][j] == 2:
+                    self.pivot_x += 100
+                elif MapTileManager.MapData[i][j] == 3:
+                    self.pivot_x += 10
+                elif MapTileManager.MapData[i][j] == 5:
+                    self.pivot_x += 25
             self.pivot_y += 200
 
         pass
@@ -109,6 +143,9 @@ class MapTileManager:
 
 
     def update(self):
+        for j in range(COLUM - 1):
+            if MapTileManager.MapData[2][j] == 3 or MapTileManager.MapData[2][j] == 5:
+               MapTileManager.mapTile_Data[2][j].update()
 
         pass
 

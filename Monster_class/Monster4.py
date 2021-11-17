@@ -33,7 +33,10 @@ class Monster4:
 
         self.frame = 0
         self.dir = 0
-        self.velocity = RUN_SPEED_PPS
+        if random.randint(0, 2) == 1:
+            self.velocity = RUN_SPEED_PPS
+        else:
+            self.velocity = RUN_SPEED_PPS * -1
 
         self.width = 23
         self.height = 33
@@ -45,6 +48,10 @@ class Monster4:
         self.enable_Show = True
         self.start_x = 0
         pass
+
+    def get_bb(self):
+        # fill here
+        return self.x - 20, self.y - 25, self.x + 20, self.y + 25
 
     def setSpot(self, x, y, left_limit, right_limit):
         self.x = x
@@ -77,8 +84,10 @@ class Monster4:
         self.x += self.velocity * game_framework.frame_time
 
         # self.x = clamp(25, self.x, WINDOW_SIZE_WIDTH - 25)
-        if self.x < self.left_limit or self.x > self.right_limit - 10:
-            self.velocity *= -1
+        if self.x < self.left_limit + 25:
+            self.velocity = RUN_SPEED_PPS * 1
+        if self.x > self.right_limit - 25:
+            self.velocity = RUN_SPEED_PPS * -1
         self.dir = clamp(-1, self.velocity, 1)
 
 
@@ -95,6 +104,7 @@ class Monster4:
             self.image.clip_composite_draw(int(self.frame) * 21, 0, self.width, self.height,\
                 0 , 'h', self.x, self.y, 50,60)
 
+        draw_rectangle(*self.get_bb())
 
 
     pass

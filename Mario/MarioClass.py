@@ -3,7 +3,7 @@ from myEnum import *
 import random
 import game_framework
 import game_world
-from Fire import *
+from Mario.Fire import *
 
 
 # fill expressions correctly
@@ -55,9 +55,6 @@ key_event_table = {
 
     (SDL_KEYDOWN, SDLK_SPACE) : JUMP_UP,
     (SDL_KEYDOWN, SDLK_a) : ATTACK
-
-
-
 }
 
 class IdleState:
@@ -74,8 +71,8 @@ class IdleState:
         Mario.timer = 1000
 
     def exit(Mario, event):
-        if event == ATTACK:
-            Mario.fire()
+        # if event == ATTACK:
+        #     Mario.fire()
 
         pass
 
@@ -89,11 +86,11 @@ class IdleState:
 
     def draw(Mario):
         # 마리오 멈춤 / 왼쪽
-        if Mario.direction == Direction.STOP and Mario.Before_direction == Direction.LEFT:
+        if Mario.direction == Direction.LEFT:
             Mario.image_right.clip_composite_draw(0, 588 - Mario.image_HEIGHT, Mario.image_WIDTH, Mario.image_HEIGHT,
                                              0, 'h', Mario.x, Mario.y, 100, 98)
         # 마리오 멈춤 / 오른쪽
-        elif Mario.direction == Direction.STOP and Mario.Before_direction == Direction.RIGHT:
+        elif Mario.direction == Direction.RIGHT:
              Mario.image_right.clip_draw(0, 588 - Mario.image_HEIGHT, Mario.image_WIDTH, Mario.image_HEIGHT, Mario.x, Mario.y, 100, 98)
 
 
@@ -117,8 +114,8 @@ class RunState:
 
 
     def exit(Mario, event):
-        if event == ATTACK:
-            Mario.fire()
+        # if event == ATTACK:
+        #     Mario.fire()
         pass
 
     def do(Mario):
@@ -152,6 +149,9 @@ class RunState:
 
         # boy.frame = (boy.frame + 1) % 8
         Mario.x += Mario.velocity * game_framework.frame_time
+        if Mario.x >= WINDOW_SIZE_WIDTH // 2:
+            Mario.x -= Mario.velocity * game_framework.frame_time
+
 
         Mario.move_dist += Mario.velocity * game_framework.frame_time
         Mario.move_prev_dst = (Mario.velocity * game_framework.frame_time)
@@ -164,7 +164,16 @@ class RunState:
         if Mario.accumulate_dist >= WINDOW_SIZE_WIDTH:
             Mario.accumulate_dist = 0.0
 
+        if Mario.dst < 0:
+           Mario.ChangeDirection(Direction.LEFT)
+        else:
+           Mario.ChangeDirection(Direction.RIGHT)
 
+        # if Mario.x <= 0:
+        #    Mario.x = 0
+        #    Mario.accumulate_dist = 0
+        #    Mario.move_prev_dst = 0
+        #    Mario.move_dist = 0
     def draw(Mario):
 
         # 마리오 : 오른쪽 / 이동
@@ -227,8 +236,8 @@ class DashState:
             Mario.dst = -1
 
     def exit(Mario, event):
-        if event == ATTACK:
-            Mario.fire()
+        # if event == ATTACK:
+        #     Mario.fire()
 
         pass
 
@@ -260,7 +269,7 @@ class DashState:
         # boy.frame = (boy.frame + 1) % 8
         Mario.x += Mario.velocity * game_framework.frame_time
         Mario.move_dist += Mario.velocity * game_framework.frame_time
-        Mario.move_prev_dst = (Mario.velocity * game_framework.frame_time)
+        Mario.move_prev_dst = (Mario.velocity *game_framework.frame_time)
         # 누적거리를 저장합니다.
         Mario.accumulate_dist += (Mario.velocity * game_framework.frame_time * Mario.dst)
         if Mario.x <= 50:
@@ -268,6 +277,12 @@ class DashState:
 
         if Mario.accumulate_dist >= WINDOW_SIZE_WIDTH:
             Mario.accumulate_dist = 0.0
+
+        if Mario.dst < 0:
+            Mario.ChangeDirection(Direction.LEFT)
+        else :
+            Mario.ChangeDirection(Direction.RIGHT)
+
 
     def draw(Mario):
 
@@ -339,6 +354,9 @@ class JumpState:
         if Mario.accumulate_dist >= WINDOW_SIZE_WIDTH:
             Mario.accumulate_dist = 0.0
 
+        if Mario.x < 0:
+            Mario.x = 0
+
     def draw(Mario):
         # 마리오 : 왼쪽 / 점프
         if Mario.dst < 0 :
@@ -371,35 +389,45 @@ next_state_table = {
     RunState: {RIGHT_UP: IdleState, LEFT_UP: IdleState,
                LEFT_DOWN: RunState, RIGHT_DOWN: RunState,
                DASH_DOWN : DashState,DASH_UP: RunState,
-               JUMP_UP: JumpState,ATTACK : RunState},
+               JUMP_UP: JumpState,
+               ATTACK : RunState},
 
     SleepState: {LEFT_DOWN: RunState, RIGHT_DOWN: RunState,
                  LEFT_UP: IdleState, RIGHT_UP: IdleState,
                  DASH_DOWN: SleepState, DASH_UP : SleepState,
-                 JUMP_UP: JumpState,ATTACK : IdleState},
+                 JUMP_UP: JumpState,
+                 ATTACK : IdleState},
 
     # cur_state : { event   : 들어갈 상태 }
     DashState: { DASH_DOWN: DashState, DASH_UP: RunState,
                  RIGHT_UP: IdleState, LEFT_UP: IdleState,
                  LEFT_DOWN: RunState, RIGHT_DOWN: RunState,
-                 DASH_TIMER: RunState,JUMP_UP: JumpState,ATTACK : IdleState},
+                 DASH_TIMER: RunState,JUMP_UP: JumpState,
+                 ATTACK : DashState},
 
     JumpState: { DASH_DOWN: JumpState, DASH_UP: JumpState,
                  RIGHT_UP: JumpState, LEFT_UP: JumpState,
                  RIGHT_DOWN: JumpState, LEFT_DOWN: JumpState,
-                 JUMP_TIMER: RunState , JUMP_UP: JumpState,ATTACK : IdleState}
+                 JUMP_TIMER: RunState , JUMP_UP: JumpState,
+                 ATTACK : JumpState}
 }
 
 class Mario:
     def __init__(self):
+
         self.image_right = load_image('mario_mainCharacter/mario_right.png')    # 500 x 588
         self.image_left = load_image('mario_mainCharacter/mario_left.png')
+        self.image_Coin = load_image('mario_map_tile/item.png')
         self.image_WIDTH = 100
         self.image_HEIGHT = 98
 
-        self.direction = Direction.STOP
+        self.direction = Direction.RIGHT
         self.Before_direction = Direction.RIGHT
         self.jumpdirection = Direction.UP
+
+        self.font = load_font('ENCR10B.TTF', 18)
+        self.cointPoint = 0
+
 
         #  이전 키 이벤트 테이블 저장
         self.Before_Key_event = None
@@ -431,9 +459,11 @@ class Mario:
 
         self.jumpTime = 0.0
         self.jumpHeight = 0.0
-        self.jumpPower = 50.0  # 이 값을 높이면 더 높이 점프 할 수 있습니다.
+        self.jumpPower = 44.0  # 이 값을 높이면 더 높이 점프 할 수 있습니다.
         self.jumpSpeed = 100   # 이 값을 높이면 점프하는 속도가 빨라집니다..
         self.posY = 0.0        # 마리오 점프 시작 위치
+
+        self.jumpTime_dir = 1
 
         # 대쉬 상태를 위한 변수
         self.dashTimer = 0
@@ -478,12 +508,13 @@ class Mario:
     def handle_event(self, event):
         # fill here
         global Before_JumpState
+        if event.type == SDL_KEYDOWN and event.key == SDLK_a:
+            self.fire()
         if (event.type, event.key) in key_event_table:
             key_event = key_event_table[(event.type, event.key)]
             if key_event == JUMP_UP:
                 Before_JumpState = self.cur_state
                 print("Before : ", str(Before_JumpState))
-
 
             self.add_event(key_event)
 
@@ -494,13 +525,27 @@ class Mario:
     def draw(self):
         # fill here
         draw_rectangle(*self.get_bb())
+        # 마리오를 출력
         self.cur_state.draw(self)
 
+        # 마리오 플레이 월드 상태 출력
+        self.font.draw(self.x - 60, self.y + 50, '(Time: %3.2f)' % get_time(), (255, 255, 0))
+        self.font.draw(100, WINDOW_SIZE_HEIGHT - 20, 'WORLD : STAGE 1', (255,255,255))
+        self.font.draw(100 + 200, WINDOW_SIZE_HEIGHT - 20, 'x : %2d' % self.cointPoint, (255, 255, 255))
+        self.font.draw(100 + 400, WINDOW_SIZE_HEIGHT - 20, 'TIME : %3.2f' % get_time(), (255, 255, 255))
+        self.image_Coin.clip_draw(1, 96,15,16, 100 + 190, WINDOW_SIZE_HEIGHT - 20, 20,20 )
+
+        pass
+
+    def jumpCollide_item(self):
+        # self.jumpTime =  self.jumpPower - 1
+        # self.jumpSpeed = 5
+        self.jumpTime_dir = -1
         pass
 
     def Jump(self,deltatime):
         self.jumpHeight = (self.jumpTime * self.jumpTime - self.jumpPower * self.jumpTime) / 4.0
-        self.jumpTime += self.jumpSpeed * game_framework.frame_time
+        self.jumpTime += self.jumpSpeed * game_framework.frame_time * self.jumpTime_dir
         # 마리오 : 점프에 따른 y값 조정
         self.y = self.posY + self.jumpHeight * -1
 
@@ -521,12 +566,13 @@ class Mario:
             self.add_event(JUMP_TIMER)
             self.cur_state = self.Before_State
 
+            self.jumpSpeed = 100
             self.jumpTime = 0
             self.jumpHeight = 0.0
             self.isJump = False
             self.y = self.Start_y
             self.jumpdirection = Direction.UP
-
+            self.jumpTime_dir = 1
             if self.Stop_After_Jump == True:
                 self.direction = Direction.STOP
                 self.Stop_After_Jump = False

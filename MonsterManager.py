@@ -1,3 +1,6 @@
+import MapManager
+
+import MapManager
 from Monster_class.Monster1 import *
 from Monster_class.Monster2 import *
 from Monster_class.Monster3 import *
@@ -46,7 +49,8 @@ class CMonsterManager():
         self.pivot_x = 0
         self.pivot_y = 125
 
-        CMonsterManager.MapData = MapTileManager.MapData
+        CMonsterManager.MapData = MapManager.MapTileManager.MapData
+
         pass
 
 
@@ -90,6 +94,8 @@ class CMonsterManager():
 
                     self.MonsterData.append(monster)
                     game_world.add_object(monster, 1)
+
+
         pass
 
     def update_tileSpot(self):

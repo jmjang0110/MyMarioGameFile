@@ -21,7 +21,7 @@ FRAMES_PER_ACTION = 1.0
 class Fire:
     image = None
 
-    def __init__(self, x = 400, y = 300, velocity = 1):
+    def __init__(self, x, y, velocity = 1):
         if Fire.image == None:
             Fire.image = load_image('mario_mainCharacter/Fireball.png')
         self.x, self.y, self.velocity = x, y, RUN_SPEED_PPS * velocity
@@ -42,7 +42,7 @@ class Fire:
         self.jumpHeight = 0.0
         self.jumpPower = 45.0  # 이 값을 높이면 더 높이 점프 할 수 있습니다.
         self.jumpSpeed = 100  # 이 값을 높이면 점프하는 속도가 빨라집니다..
-        self.posY = 150.0  # 마리오 점프 시작 위치
+        self.posY = self.y  # 마리오 점프 시작 위치
 
     def get_bb(self):
         # fill here
@@ -81,5 +81,6 @@ class Fire:
             self.jumpHeight = 0.0
             self.isJump = False
             self.y = self.Start_y
+            self.posY = self.y
 
 
