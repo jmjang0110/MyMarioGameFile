@@ -5,7 +5,7 @@ import game_world
 
 # fill expressions correctly
 PIXEL_PER_METER = (10.0 / 0.3) # 10 pixel 30 cm
-RUN_SPEED_KMPH = 15.0 # km / Hour
+RUN_SPEED_KMPH = 10.0 # km / Hour
 RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0 )
 RUN_SPEED_MPS = ( RUN_SPEED_MPM / 60.0 )
 RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
@@ -13,23 +13,23 @@ RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
 
 # Boy Action Speed
 # fill expressions correctly
-TIME_PER_ACTION = 0.5
+TIME_PER_ACTION = 5.0
 ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
-FRAMES_PER_ACTION = 1.0
+FRAMES_PER_ACTION = 100
 
 
-class Fire:
+class MonsterFire:
     image = None
 
-    def __init__(self, x = 400, y = 300, velocity = 1):
-        if Fire.image == None:
-            Fire.image = load_image('mario_mainCharacter/Fireball.png')
+    def __init__(self, x = 400, y = 300, velocity = -1):
+        if MonsterFire.image == None:
+            MonsterFire.image = load_image('mario_monster/mario_monster_sheet.png')
         self.x, self.y, self.velocity = x, y, RUN_SPEED_PPS * velocity
         # 점프를 위한 변수
         self.Start_y = 150
 
-        self.image_Width = 30
-        self.image_Height = 30
+        self.image_Width = 20
+        self.image_Height = 20
         self.frame = 0
 
         self.isJump = False
@@ -44,27 +44,35 @@ class Fire:
         self.jumpSpeed = 100  # 이 값을 높이면 점프하는 속도가 빨라집니다..
         self.posY = 150.0  # 마리오 점프 시작 위치
 
+        self.DeleteTimer = 2.0
+
     def get_bb(self):
         # fill here
-        return self.x - self.image_Width // 2, self.y - self.image_Height // 2\
-            , self.x + self.image_Width // 2, self.y + self.image_Height // 2
+        return self.x - self.image_Width // 2 + 2, self.y - self.image_Height // 2\
+            , self.x + self.image_Width // 2 - 2, self.y + self.image_Height // 2 - 3
 
     def draw(self):
         angle = math.atan2(self.y , self.x)
-        self.image.clip_composite_draw(0,int(self.frame) * 30,self.image_Width,self.image_Height,angle - 60,'none',self.x,self.y,50,50)
+        self.image.clip_composite_draw(105 + int(self.frame) * 21 ,1753,
+                                       self.image_Width,self.image_Height,0,'none',self.x,self.y,30,30)
 
         draw_rectangle(*self.get_bb())
 
     def update(self):
         self.x += self.velocity * game_framework.frame_time
-        self.Jump(game_framework.frame_time)
-        self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 3
-        print(self.frame)
+        self.DeleteTimer -= 3 * game_framework.frame_time
 
-        # if self.x < 25 or self.x > 1600 - 25:
-        #     game_world.remove_object(self)
-        if self.jumpPower <= 3:
+        if self.DeleteTimer <= 0.0:
             game_world.remove_object(self)
+        # self.Jump(game_framework.frame_time)
+        self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 4
+        # print(self.frame)
+        #
+        # # if self.x < 25 or self.x > 1600 - 25:
+        # #     game_world.remove_object(self)
+        # if self.jumpPower <= 3:
+        #     game_world.remove_object(self)
+
 
     def Jump(self,deltatime):
         self.jumpHeight = (self.jumpTime * self.jumpTime - self.jumpPower * self.jumpTime) / 4.0

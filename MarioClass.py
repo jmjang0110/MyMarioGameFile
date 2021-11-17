@@ -9,7 +9,7 @@ from Fire import *
 # fill expressions correctly
 PIXEL_PER_METER = (10.0 / 0.3 ) # 10 pixel 30 cm
 # R U N
-RUN_SPEED_KMPH = 20.0 # km / Hour
+RUN_SPEED_KMPH = 15.0 # km / Hour
 RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0) # km -> m / second
 RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0) # M / second
 # 픽셀 단위의 속도가 구해진다.
@@ -152,7 +152,9 @@ class RunState:
 
         # boy.frame = (boy.frame + 1) % 8
         Mario.x += Mario.velocity * game_framework.frame_time
+
         Mario.move_dist += Mario.velocity * game_framework.frame_time
+        Mario.move_prev_dst = (Mario.velocity * game_framework.frame_time)
 
         # 누적거리를 저장합니다.
         Mario.accumulate_dist += (Mario.velocity * game_framework.frame_time * Mario.dst)
@@ -258,7 +260,7 @@ class DashState:
         # boy.frame = (boy.frame + 1) % 8
         Mario.x += Mario.velocity * game_framework.frame_time
         Mario.move_dist += Mario.velocity * game_framework.frame_time
-
+        Mario.move_prev_dst = (Mario.velocity * game_framework.frame_time)
         # 누적거리를 저장합니다.
         Mario.accumulate_dist += (Mario.velocity * game_framework.frame_time * Mario.dst)
         if Mario.x <= 50:
@@ -329,6 +331,7 @@ class JumpState:
         Mario.move_dist += Mario.velocity * game_framework.frame_time
 
         # 누적거리를 저장합니다.
+        Mario.move_prev_dst =  (Mario.velocity * game_framework.frame_time )
         Mario.accumulate_dist += (Mario.velocity * game_framework.frame_time * Mario.dst)
         if Mario.x <= 50:
             Mario.accumulate_dist = 0
@@ -408,6 +411,8 @@ class Mario:
         self.x, self.y = 50, 150
         self.timer = 0
         self.accumulate_dist = 0.0
+        # 마리오가 방금 움직인 거리
+        self.move_prev_dst = 0.0
         self.move_dist = 0.0
 
         self.velocity = 0.0
@@ -426,7 +431,7 @@ class Mario:
 
         self.jumpTime = 0.0
         self.jumpHeight = 0.0
-        self.jumpPower = 60.0  # 이 값을 높이면 더 높이 점프 할 수 있습니다.
+        self.jumpPower = 50.0  # 이 값을 높이면 더 높이 점프 할 수 있습니다.
         self.jumpSpeed = 100   # 이 값을 높이면 점프하는 속도가 빨라집니다..
         self.posY = 0.0        # 마리오 점프 시작 위치
 
@@ -437,6 +442,11 @@ class Mario:
         self.event_que = []
         self.cur_state = IdleState
         self.cur_state.enter(self, None)
+
+    def get_bb(self):
+        # fill here
+        return self.x - 20, self.y, self.x + 20, self.y + 50
+
 
     def change_state(self, state):
         # fill here
@@ -483,6 +493,7 @@ class Mario:
 
     def draw(self):
         # fill here
+        draw_rectangle(*self.get_bb())
         self.cur_state.draw(self)
 
         pass

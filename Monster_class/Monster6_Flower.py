@@ -2,6 +2,8 @@ from pico2d import *
 from myEnum import *
 import random
 import game_framework
+from Monster_class.MonsterFire import *
+
 import game_world
 
 
@@ -19,14 +21,14 @@ RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER) # pixel per second
 # fill expressions correctly
 TIME_PER_ACTION = 0.7 # 0.5초 정도 걸릴 것이다.
 ACTION_PER_TIME = 1.0 / TIME_PER_ACTION # 초당 2번 역수이므로
-FRAMES_PER_ACTION = 4 # 8장 프레임
+FRAMES_PER_ACTION = 2 # 8장 프레임
 
-class Monster4:
+class Monster6:
     image = None
 
     def __init__(self):
-        if Monster4.image == None:
-            Monster4.image = load_image('mario_monster/m_Monster4.png')
+        if Monster6.image == None:
+            Monster6.image = load_image('mario_monster/mario_monster_sheet.png')
 
         self.x = random.randint(10, 200)
         self.y = 120
@@ -44,6 +46,10 @@ class Monster4:
         self.right_limit = 0
         self.enable_Show = True
         self.start_x = 0
+
+        self.fireTimer = 0.0
+        self.fireTimer_Limit = 5.0
+        self.firenum = 3
         pass
 
     def setSpot(self, x, y, left_limit, right_limit):
@@ -62,8 +68,7 @@ class Monster4:
 
     def update_spot_byMarioMove(self, move_prev_dst):
         self.x -= move_prev_dst
-        self.left_limit -= move_prev_dst
-        self.right_limit -= move_prev_dst
+
 
     pass
 
@@ -72,15 +77,22 @@ class Monster4:
             return
 
         self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME
-                       * game_framework.frame_time) % 4
+                       * game_framework.frame_time) % 2
 
-        self.x += self.velocity * game_framework.frame_time
+        self.fireTimer += FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time
+        if self.fireTimer >= self.fireTimer_Limit:
+            self.fireTimer_Limit = 1.0
+            self.fireTimer = 0.0
+            self.firenum -= 1
 
-        # self.x = clamp(25, self.x, WINDOW_SIZE_WIDTH - 25)
-        if self.x < self.left_limit or self.x > self.right_limit - 10:
-            self.velocity *= -1
-        self.dir = clamp(-1, self.velocity, 1)
+            if self.firenum <= -1:
+                self.fireTimer_Limit = 5.0
+                self.firenum = 3
+                self.fireTimer = 0.0
 
+
+
+            self.fire()
 
 
         pass
@@ -89,15 +101,19 @@ class Monster4:
             return
 
         if self.velocity >= 1:
-            self.image.clip_draw(int(self.frame)  * 21, 0, self.width ,self.height,
+            self.image.clip_draw(210 + int(self.frame)  * 50, 1743, self.width ,self.height,
                     self.x, self.y, 50,60)
         else:
-            self.image.clip_composite_draw(int(self.frame) * 21, 0, self.width, self.height,\
+            self.image.clip_composite_draw(205 + int(self.frame)  * 43, 1743, self.width, self.height,\
                 0 , 'h', self.x, self.y, 50,60)
 
 
 
     pass
+    def fire(self):
+        mFire = MonsterFire(self.x, self.y, -1 * 3)
+        game_world.add_object(mFire, 1)
+
 
 
 

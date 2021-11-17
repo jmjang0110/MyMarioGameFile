@@ -9,7 +9,7 @@ import game_world
 # fill expressions correctly
 PIXEL_PER_METER = (10.0 / 0.3) # 10 pixel 30 cm
 # R U N
-RUN_SPEED_KMPH = 20.0 # km / Hour
+RUN_SPEED_KMPH = 22.0 # km / Hour
 RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0) # km -> m / second
 RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0) # M / second
 # 픽셀 단위의 속도가 구해진다.
@@ -40,16 +40,43 @@ class Monster3:
 
         self.dir = clamp(-1, self.velocity, 1)
 
+        self.left_limit = 0
+        self.right_limit = 0
+        self.enable_Show = True
+        self.start_x = 0
         pass
 
+    def setSpot(self, x, y, left_limit, right_limit):
+        self.x = x
+        self.y = y + 25
+        self.start_x = x
+        # if self.x >= WINDOW_SIZE_WIDTH:
+        #     self.enable_Show = False
+
+
+        self.left_limit = self.x - left_limit
+        self.right_limit = self.x + right_limit
+
+        pass
+
+    def update_spot_byMarioMove(self, move_prev_dst):
+        self.x -= move_prev_dst
+        self.left_limit -= move_prev_dst
+        self.right_limit -= move_prev_dst
+
+    pass
+
     def update(self):
+        if self.enable_Show == False:
+            return
+
         self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME
                        * game_framework.frame_time) % 4
 
         self.x += self.velocity * game_framework.frame_time
 
-        self.x = clamp(25, self.x, WINDOW_SIZE_WIDTH - 25)
-        if self.x <= 25 or self.x >= 800 - 25:
+        # self.x = clamp(25, self.x, WINDOW_SIZE_WIDTH - 25)
+        if self.x < self.left_limit or self.x > self.right_limit - 10:
             self.velocity *= -1
         self.dir = clamp(-1, self.velocity, 1)
 
@@ -57,6 +84,9 @@ class Monster3:
 
         pass
     def draw(self):
+        if self.enable_Show == False:
+            return
+
         if self.velocity >= 1:
             self.image.clip_draw(int(self.frame)  * 30, 0, self.width ,self.height,
                     self.x, self.y, 50,60)
