@@ -1,9 +1,12 @@
 from pico2d import *
+
+import state_class.main_state
 from myEnum import *
 import random
 import game_framework
 import game_world
-from Mario.Fire import *
+from MarioFile.Fire import *
+from state_class.main_state import *
 
 
 # fill expressions correctly
@@ -111,6 +114,7 @@ class RunState:
             Mario.dst = 1
         else :
             Mario.dst = -1
+
 
 
     def exit(Mario, event):
@@ -412,8 +416,11 @@ next_state_table = {
                  ATTACK : JumpState}
 }
 
-class Mario:
+class CMario:
+    fireData = None
+
     def __init__(self):
+        CMario.fireData = []
 
         self.image_right = load_image('mario_mainCharacter/mario_right.png')    # 500 x 588
         self.image_left = load_image('mario_mainCharacter/mario_left.png')
@@ -598,8 +605,9 @@ class Mario:
         self.Stop_After_Jump = stopORgo
 
     def fire(self):
-        fire = Fire(self.x, self.y, self.dst * 3)
-        game_world.add_object(fire,1)
+        makefire = Fire(self.x, self.y, self.dst * 3)
+        state_class.main_state.fire.append(makefire)
+        game_world.add_object(makefire,1)
 
 
 

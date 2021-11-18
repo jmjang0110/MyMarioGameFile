@@ -48,7 +48,23 @@ class Monster1:
 
         self.enable_Show = True
         self.start_x = 0
+
+        self.HP = 1000
+
         pass
+
+    def HPDown(self, Attack ):
+        self.HP -= Attack
+        if self.HP <= 0:
+            game_world.remove_object(self)
+        pass
+    def DieCheck(self):
+        if self.HP <= 0:
+            return True
+        else :
+            return False
+        pass
+
 
     def get_bb(self):
         # fill here

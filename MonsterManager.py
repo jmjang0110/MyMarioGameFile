@@ -28,7 +28,7 @@ COLUM = (WINDOW_SIZE_WIDTH // 50) + 20 # 가로
 
 class CMonsterManager():
     MapData = []
-
+    MonsterData = []
 
     def __init__(self):
 
@@ -40,8 +40,6 @@ class CMonsterManager():
 
         # CMonsterManager.MapData = [[0 for i in range(COLUM)] for j in range(ROW)]
         # self.mapTile_Data = [[MapTile() for i in range(COLUM)] for j in range(ROW)]
-
-        self.MonsterData = []
 
         self.MapStart_x = 100
         self.MapStart_y = 25
@@ -85,14 +83,13 @@ class CMonsterManager():
                                         MapTileManager.mapTile_Data[i][j].Tile_Width_size // 2,
                                         MapTileManager.mapTile_Data[i][j].Tile_Width_size // 2)
                     if Monsterindex != 5:
-                        self.MonsterData.append(monster)
+                        CMonsterManager.MonsterData.append(monster)
                         game_world.add_object(monster, 1)
 
                 elif CMonsterManager.MapData[i][j] == 2:
                     monster = Monster6()
                     monster.setSpot(MapTileManager.mapTile_Data[i][j].x - 40, MapTileManager.mapTile_Data[i][j].y - 30,0,0)
-
-                    self.MonsterData.append(monster)
+                    CMonsterManager.MonsterData.append(monster)
                     game_world.add_object(monster, 1)
 
 
@@ -109,7 +106,7 @@ class CMonsterManager():
         #     for j in range(COLUM - 1):
         #         self.mapTile_Data[i][j].update_spot_byMarioMove(accumulate_dst * 2.5)
         for i in range(len(self.MonsterData)):
-                self.MonsterData[i].update_spot_byMarioMove(move_prev_dst)
+                CMonsterManager.MonsterData[i].update_spot_byMarioMove(move_prev_dst)
 
 
         pass
@@ -124,7 +121,7 @@ class CMonsterManager():
         #         if MapTileManager.MapData[i][j] != 0:
         #             self.mapTile_Data[i][j].draw()
         for i in range(len(self.MonsterData)):
-            self.MonsterData[i].draw()
+            CMonsterManager.MonsterData[i].draw()
 
 
 

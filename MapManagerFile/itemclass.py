@@ -13,8 +13,8 @@ class ItemClass:
             ItemClass.itemImage = load_image('mario_map_tile/item.png')
 
         self.myCoin = CCoinClass()
-        self.font = load_font('Mario/ENCR10B.TTF', 16)
-        self.collidenum = 3
+        self.font = load_font('MarioFile/ENCR10B.TTF', 16)
+        self.collidenum = 10
         self.ChangeColor = 0
 
 

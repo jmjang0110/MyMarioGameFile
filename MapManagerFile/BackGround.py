@@ -10,7 +10,7 @@ import random
 
 class CBackGround:
     def __init__(self):
-        self.BackGround_forTest = load_image('Mario/Mario_BackGround_Test.png')
+        self.BackGround_forTest = load_image('MarioFile/Mario_BackGround_Test.png')
 
         self.BackGround_1 = self.BackGround_forTest
         self.BackGround_1_Pivot_x = WINDOW_SIZE_WIDTH / 2

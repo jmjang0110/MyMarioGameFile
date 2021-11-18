@@ -3,6 +3,7 @@ from myEnum import *
 import random
 import game_framework
 from Monster_class.MonsterFire import *
+from MonsterManager import *
 
 import game_world
 
@@ -29,6 +30,7 @@ class Monster6:
     def __init__(self):
         if Monster6.image == None:
             Monster6.image = load_image('mario_monster/mario_monster_sheet.png')
+        self.HP = 1000
 
         self.x = random.randint(10, 200)
         self.y = 120
@@ -50,7 +52,28 @@ class Monster6:
         self.fireTimer = 0.0
         self.fireTimer_Limit = 5.0
         self.firenum = 3
+
+        self.HP = 1000
+
         pass
+
+    def DieCheck(self):
+        pass
+        if self.HP <= 0:
+            return True
+        else:
+            return False
+        pass
+
+    def HPDown(self, Attack):
+        pass
+        # self.HP -= Attack
+        if self.HP <= 0:
+            game_world.remove_object(self)
+        pass
+    def get_bb(self):
+        # fill here
+        return self.x - 20, self.y - 25, self.x + 20, self.y + 25
 
     def setSpot(self, x, y, left_limit, right_limit):
         self.x = x
@@ -63,6 +86,9 @@ class Monster6:
 
         self.left_limit = self.x - left_limit
         self.right_limit = self.x + right_limit
+
+
+
 
         pass
 
@@ -116,7 +142,7 @@ class Monster6:
             self.image.clip_composite_draw(205 + int(self.frame)  * 43, 1743, self.width, self.height,\
                 0 , 'h', self.x, self.y, 50,60)
 
-
+        draw_rectangle(*self.get_bb())
 
     pass
     def fire(self):

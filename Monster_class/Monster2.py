@@ -27,6 +27,7 @@ class Monster2:
     def __init__(self):
         if Monster2.image == None:
             Monster2.image = load_image('mario_monster/mario_monster_sheet.png')
+        self.HP = 1000
 
         self.x = random.randint(10, 200)
         self.y = 120
@@ -47,10 +48,20 @@ class Monster2:
         self.right_limit = 0
 
         self.enable_Show = True
-
+        self.HP = 1000
         self.start_x = 0
         pass
 
+    def DieCheck(self):
+        if self.HP <= 0:
+            return True
+        else:
+            return False
+    def HPDown(self, Attack):
+        self.HP -= Attack
+        if self.HP <= 0:
+            game_world.remove_object(self)
+        pass
     def get_bb(self):
         # fill here
         return self.x - 32, self.y - 35, self.x + 32, self.y + 30

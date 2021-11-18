@@ -13,7 +13,7 @@ import game_world
 from myEnum import *
 # from MarioClass import *
 from MapManagerFile.BackGround import *
-from Mario.MarioClass import *
+from MarioFile.MarioClass import *
 from Monster_class.Monster1 import *
 from Monster_class.Monster2 import *
 from Monster_class.Monster3 import *
@@ -28,18 +28,74 @@ from MonsterManager import *
 name = "MainState"
 
 mario = None
+fire = []
+font = None
+
+mapManager = None
 backGround = None
+maptile1 = None
+
+monsterManager = None
 monster1 = None
 monster2 = None
 monster3 = None
 monster4 = None
-font = None
+
+def EraseMonster():
+    for i in range(len(CMonsterManager.MonsterData)):
+        if CMonsterManager.MonsterData[i].DieCheck():
+            del CMonsterManager.MonsterData[i]
+        break
+
+def collideCheck_withFire():
+    idx = 0
+    # for num in MapManager.MapTileManager.MapData[0]:
+    #     if num == 0:
+    #         continue
+    #     if num == 1:
+
+    print('fire Num : ' ,len(fire))
+    for k in range(len(CMonsterManager.MonsterData)):
+        for i in range(len(fire)):
+            if collide(fire[i], CMonsterManager.MonsterData[k]):
+                print("COLLISION")
+                fire[i].EraseMe()
+                del fire[i]
+                print('del fire Num : ', len(fire))
+                CMonsterManager.MonsterData[k].HPDown(250)
+                break
+    idx += 1
 
 
-mapManager = None
-monsterManager = None
+    pass
 
-maptile1 = None
+def collideCheck():
+    # 아이템 박스와 충돌 체크
+    idx = 0
+    for num in MapManager.MapTileManager.MapData[2]:
+        # 아이템과 충돌 체크
+        if num == 3 or num == 5:
+            if collide(mario, MapManager.MapTileManager.mapTile_Data[2][idx]):
+                MapManager.MapTileManager.mapTile_Data[2][idx].collidenum -= 1
+                mario.jumpCollide_item()
+
+        idx += 1
+
+    # 마리오의 Fire 와 몬스터와의 충돌 체크
+    # 1층 에서의 충돌 체크
+    collideCheck_withFire()
+    EraseMonster()
+    pass
+
+def moveStage():
+    backGround.Update_accumulate_Dist(mario.accumulate_dist)
+
+    mapManager.update_tileSpot_byMarioMove(mario.move_prev_dst * 1.5)
+    mapManager.update()
+
+    monsterManager.update_tileSpot_byMarioMove(mario.move_prev_dst * 1.5)
+    mario.move_prev_dst = 0
+    pass
 
 def collide(a, b):
     # fill here
@@ -57,7 +113,7 @@ def collide(a, b):
 def enter():
     global mario, backGround,mapManager,monsterManager
 
-    mario = Mario()
+    mario = CMario()
     backGround = CBackGround()
     monster1 = Monster1()
     monster2 = Monster2()
@@ -117,29 +173,11 @@ def handle_events():
 
 
 def update():
-
-
     for game_object in game_world.all_objects():
         game_object.update()
 
-    backGround.Update_accumulate_Dist(mario.accumulate_dist)
-
-    mapManager.update_tileSpot_byMarioMove(mario.move_prev_dst * 1.5)
-    mapManager.update()
-
-    monsterManager.update_tileSpot_byMarioMove(mario.move_prev_dst * 1.5)
-    mario.move_prev_dst = 0
-
-    # 아이템 박스와 충돌 체크
-    idx = 0
-    for num in MapManager.MapTileManager.MapData[2]:
-        # 아이템과 충돌 체크
-        if num == 3 or num == 5:
-            if collide(mario,MapManager.MapTileManager.mapTile_Data[2][idx]):
-                MapManager.MapTileManager.mapTile_Data[2][idx].collidenum -= 1
-                mario.jumpCollide_item()
-
-        idx += 1
+    moveStage()
+    collideCheck()
 
     pass
 

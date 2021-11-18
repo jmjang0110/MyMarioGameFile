@@ -27,6 +27,7 @@ class Monster3:
     def __init__(self):
         if Monster3.image == None:
             Monster3.image = load_image('mario_monster/m_Monster3.png')
+        self.HP = 1000
 
         self.x = random.randint(10, 200)
         self.y = 120
@@ -40,7 +41,7 @@ class Monster3:
 
         self.width = 30
         self.height = 40
-
+        self.HP = 1000
         self.dir = clamp(-1, self.velocity, 1)
 
         self.left_limit = 0
@@ -49,6 +50,16 @@ class Monster3:
         self.start_x = 0
         pass
 
+    def DieCheck(self):
+        if self.HP <= 0:
+            return True
+        else:
+            return False
+    def HPDown(self, Attack):
+        self.HP -= Attack
+        if self.HP <= 0:
+            game_world.remove_object(self)
+        pass
     def get_bb(self):
         # fill here
         return self.x - 20, self.y - 25, self.x + 20, self.y + 25

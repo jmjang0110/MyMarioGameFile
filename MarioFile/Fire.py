@@ -2,6 +2,8 @@ from pico2d import *
 import game_framework
 import game_world
 
+from MarioFile.MarioClass import *
+
 
 # fill expressions correctly
 PIXEL_PER_METER = (10.0 / 0.3) # 10 pixel 30 cm
@@ -17,6 +19,7 @@ TIME_PER_ACTION = 0.5
 ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
 FRAMES_PER_ACTION = 1.0
 
+# marioInfo = CMario
 
 class Fire:
     image = None
@@ -24,9 +27,13 @@ class Fire:
     def __init__(self, x, y, velocity = 1):
         if Fire.image == None:
             Fire.image = load_image('mario_mainCharacter/Fireball.png')
+
+
         self.x, self.y, self.velocity = x, y, RUN_SPEED_PPS * velocity
         # 점프를 위한 변수
         self.Start_y = 150
+
+        self.Erase = False
 
         self.image_Width = 30
         self.image_Height = 30
@@ -44,6 +51,10 @@ class Fire:
         self.jumpSpeed = 100  # 이 값을 높이면 점프하는 속도가 빨라집니다..
         self.posY = self.y  # 마리오 점프 시작 위치
 
+    def EraseMe(self):
+        self.Erase = True
+        game_world.remove_object(self)
+
     def get_bb(self):
         # fill here
         return self.x - self.image_Width // 2, self.y - self.image_Height // 2\
@@ -56,6 +67,7 @@ class Fire:
         draw_rectangle(*self.get_bb())
 
     def update(self):
+        global marioInfo
         self.x += self.velocity * game_framework.frame_time
         self.Jump(game_framework.frame_time)
         self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 3
@@ -64,6 +76,8 @@ class Fire:
         # if self.x < 25 or self.x > 1600 - 25:
         #     game_world.remove_object(self)
         if self.jumpPower <= 3:
+            # marioInfo.fireData.pop()
+            # Mario.fireData.pop(self)
             game_world.remove_object(self)
 
     def Jump(self,deltatime):
