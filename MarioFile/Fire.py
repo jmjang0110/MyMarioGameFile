@@ -71,7 +71,7 @@ class Fire:
         self.x += self.velocity * game_framework.frame_time
         self.Jump(game_framework.frame_time)
         self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 3
-        print(self.frame)
+        # print(self.frame)
 
         # if self.x < 25 or self.x > 1600 - 25:
         #     game_world.remove_object(self)

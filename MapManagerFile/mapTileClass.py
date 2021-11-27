@@ -50,9 +50,12 @@ class MapTile:
     def update_spot_byMarioMove(self,accumulate_dist):
         if MapTile.mapTileImage == None:
             pass
-
         # self.x = self.start_x - accumulate_dist
         self.x -= accumulate_dist
+
+    def lateUpdate(self):
+
+        pass
 
 
     def update(self):

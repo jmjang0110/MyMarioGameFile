@@ -3,6 +3,8 @@ from pico2d import *
 from myEnum import *
 
 from MapManagerFile.mountainClass import *
+import state_class.server
+
 
 import random
 
@@ -47,13 +49,21 @@ class CBackGround:
 
 
         pass
+
+    def lateUpdate(self):
+
+        pass
+
+
+
     def update(self):
+        self.Update_accumulate_Dist()
+
         pass
 
     # 마리오의 움직임 누적거리를 받습니다.
-    def Update_accumulate_Dist(self,accumulate_dist):
-        self.BackMoveDist = accumulate_dist
-
+    def Update_accumulate_Dist(self):
+        self.BackMoveDist = state_class.server.mario.accumulate_dist
         if self.BackMoveDist == 0.0 and self.BackGround_1_Pivot_x <= -(WINDOW_SIZE_WIDTH / 2):
             self.BackGround_1_Pivot_x =  WINDOW_SIZE_WIDTH + WINDOW_SIZE_WIDTH / 2
             # self.BackGround_2_Pivot_x = WINDOW_SIZE_WIDTH / 2

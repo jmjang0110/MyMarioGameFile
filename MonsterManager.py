@@ -100,31 +100,38 @@ class CMonsterManager():
         pass
 
 
-    def update_tileSpot_byMarioMove(self, move_prev_dst):
-        # print('update tilespot')
-        # for i in range(ROW - 1):
-        #     for j in range(COLUM - 1):
-        #         self.mapTile_Data[i][j].update_spot_byMarioMove(accumulate_dst * 2.5)
+    # def update_tileSpot_byMarioMove(self, move_prev_dst):
+    #     # print('update tilespot')
+    #     # for i in range(ROW - 1):
+    #     #     for j in range(COLUM - 1):
+    #     #         self.mapTile_Data[i][j].update_spot_byMarioMove(accumulate_dst * 2.5)
+    #     for i in range(len(self.MonsterData)):
+    #             CMonsterManager.MonsterData[i].update_spot_byMarioMove(move_prev_dst)
+    #
+    #
+    #     pass
+
+    def update_tileSpot_byMarioMove(self):
         for i in range(len(self.MonsterData)):
-                CMonsterManager.MonsterData[i].update_spot_byMarioMove(move_prev_dst)
+            CMonsterManager.MonsterData[i].update_spot_byMarioMove(state_class.server.mario.move_prev_dst * 2.0)
 
 
         pass
 
+    def lateUpdate(self):
+        self.update_tileSpot_byMarioMove()
+
+        pass
+
+
     def update(self):
+
 
         pass
 
     def draw(self):
-        # for i in range(ROW -1 ):
-        #     for j in range(COLUM - 1):
-        #         if MapTileManager.MapData[i][j] != 0:
-        #             self.mapTile_Data[i][j].draw()
         for i in range(len(self.MonsterData)):
             CMonsterManager.MonsterData[i].draw()
-
-
-
         pass
 
 

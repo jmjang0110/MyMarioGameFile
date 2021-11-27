@@ -1,5 +1,7 @@
 
 from pico2d import *
+
+import state_class.server
 from myEnum import *
 import random
 import game_framework
@@ -52,8 +54,8 @@ class MapTileManager:
                                      0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0]
 
         # 중간 3 : 코인 , 2 : 초록 하수구
-        MapTileManager.MapData[2] = [0, 0, 3, 3, 3, 0, 0, 5, 5, 0, 0, 2, 0, 0, 5, 5, 0, 2, 0, 3, 3, 3, 0, 2, 0, 0, 0, 0,
-                                     0, 0, 2, 0, 3, 3, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        MapTileManager.MapData[2] = [0, 0, 3, 3, 3, 0, 0, 5, 5, 0, 0, 0, 2, 0, 5, 5, 0, 2, 0, 3, 3, 3, 0, 2, 0, 0, 0, 0,
+                                     0, 0, 0, 2, 3, 3, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
         # 1 층
         MapTileManager.MapData[0] = [1, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0,
@@ -135,17 +137,29 @@ class MapTileManager:
         pass
 
 
-    def update_tileSpot_byMarioMove(self, accumulate_dst):
+    # def update_tileSpot_byMarioMove(self, accumulate_dst):
+    #     # print('update tilespot')
+    #     for i in range(ROW - 1):
+    #         for j in range(COLUM - 1):
+    #             MapTileManager.mapTile_Data[i][j].update_spot_byMarioMove(accumulate_dst)
+
+    def update_tileSpot_byMarioMove(self):
         # print('update tilespot')
         for i in range(ROW - 1):
             for j in range(COLUM - 1):
-                MapTileManager.mapTile_Data[i][j].update_spot_byMarioMove(accumulate_dst)
+                MapTileManager.mapTile_Data[i][j].update_spot_byMarioMove(state_class.server.mario.move_prev_dst * 2.0)
 
+    def lateUpdate(self):
+        # 마리오 움직임에 따라 타일들을 움직입니다.
+        self.update_tileSpot_byMarioMove()
+
+        pass
 
     def update(self):
         for j in range(COLUM - 1):
             if MapTileManager.MapData[2][j] == 3 or MapTileManager.MapData[2][j] == 5:
                MapTileManager.mapTile_Data[2][j].update()
+
 
         pass
 

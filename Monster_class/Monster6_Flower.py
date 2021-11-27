@@ -26,11 +26,14 @@ FRAMES_PER_ACTION = 2 # 8장 프레임
 
 class Monster6:
     image = None
-    FireData = []
+
     def __init__(self):
         if Monster6.image == None:
             Monster6.image = load_image('mario_monster/mario_monster_sheet.png')
         self.HP = 1000
+        self.FireData = []
+        self.FireCount = 0
+
 
         self.x = random.randint(10, 200)
         self.y = 120
@@ -94,12 +97,21 @@ class Monster6:
 
     def update_spot_byMarioMove(self, move_prev_dst):
         self.x -= move_prev_dst
-        for i in range(len(Monster6.FireData)):
-            Monster6.FireData[i].update_spot_byMarioMove(move_prev_dst)
-
-
+        self.update_spot_byMarioMove_Fire(move_prev_dst)
 
     pass
+
+    def update_spot_byMarioMove_Fire(self,move_prev_dst):
+        # FLOWER 가 발사하는 화염의 위치도 마리오 움직임에 따라 이동
+        for i in range(len(self.FireData)):
+            self.FireData[i].update_spot_byMarioMove(move_prev_dst)
+
+    def lateUpdate(self):
+
+
+        pass
+
+
 
     def update(self):
         if self.enable_Show == False:
@@ -107,12 +119,6 @@ class Monster6:
 
         self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME
                        * game_framework.frame_time) % 2
-
-        # for i in range(len(Monster6.FireData)):
-        #     if Monster6.FireData[i].check_remove() == True:
-        #         Monster6.FireData.remove(Monster6.FireData[i])
-
-
 
         self.fireTimer += FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time
         if self.fireTimer >= self.fireTimer_Limit:
@@ -124,11 +130,9 @@ class Monster6:
                 self.fireTimer_Limit = 5.0
                 self.firenum = 3
                 self.fireTimer = 0.0
-
-
-
             self.fire()
 
+        self.lateUpdate()
 
         pass
     def draw(self):
@@ -139,7 +143,7 @@ class Monster6:
             self.image.clip_draw(210 + int(self.frame)  * 50, 1743, self.width ,self.height,
                     self.x, self.y, 50,60)
         else:
-            self.image.clip_composite_draw(205 + int(self.frame)  * 43, 1743, self.width, self.height,\
+            self.image.clip_composite_draw(205 + int(self.frame)  * 43, 1743, self.width, self.height,
                 0 , 'h', self.x, self.y, 50,60)
 
         draw_rectangle(*self.get_bb())
@@ -148,7 +152,17 @@ class Monster6:
     def fire(self):
 
         mFire = MonsterFire(self.x, self.y, -1 * 3)
-        # Monster6.FireData.append(mFire)
+
+
+        if self.FireCount > 3:
+            self.FireCount = 0
+            self.FireData.clear()
+        self.FireCount += 1
+
+        self.FireData.append(mFire)
+
+
+
         game_world.add_object(mFire, 1)
 
 

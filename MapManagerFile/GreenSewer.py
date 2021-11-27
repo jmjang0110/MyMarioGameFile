@@ -54,6 +54,7 @@ class CGreenSewer:
         self.x -= accumulate_dist
 
 
+
     def update(self):
         pass
 

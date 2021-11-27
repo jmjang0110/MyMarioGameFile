@@ -62,6 +62,11 @@ class ItemClass:
         self.x -= accumulate_dist
         self.myCoin.update_spot_byMarioMove(accumulate_dist)
 
+    def lateUpdate(self):
+
+        pass
+
+
     def update(self):
         if self.ChangeColor >= 2:
             return

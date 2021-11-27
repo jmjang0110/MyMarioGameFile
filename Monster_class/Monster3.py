@@ -83,6 +83,11 @@ class Monster3:
 
     pass
 
+    def lateUpdate(self):
+
+        pass
+
+
     def update(self):
         if self.enable_Show == False:
             return

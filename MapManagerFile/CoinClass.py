@@ -96,6 +96,10 @@ class CCoinClass:
         # self.x = self.start_x - accumulate_dist
         self.x -= accumulate_dist
 
+    def lateUpdate(self):
+
+        pass
+
 
     def update(self):
         self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME

@@ -160,6 +160,12 @@ class RunState:
         Mario.move_dist += Mario.velocity * game_framework.frame_time
         Mario.move_prev_dst = (Mario.velocity * game_framework.frame_time)
 
+        if Mario.move_dist <= 0:
+            Mario.move_dist = 0
+            Mario.move_prev_dst = 0
+            
+
+
         # 누적거리를 저장합니다.
         Mario.accumulate_dist += (Mario.velocity * game_framework.frame_time * Mario.dst)
         if Mario.x <= 50:
@@ -347,7 +353,12 @@ class JumpState:
 
         Mario.timer -= 1
         Mario.x += Mario.velocity * game_framework.frame_time
+        if Mario.x >= WINDOW_SIZE_WIDTH // 2:
+            Mario.x -= Mario.velocity * game_framework.frame_time
+
+
         Mario.move_dist += Mario.velocity * game_framework.frame_time
+
 
         # 누적거리를 저장합니다.
         Mario.move_prev_dst =  (Mario.velocity * game_framework.frame_time )
@@ -446,6 +457,7 @@ class CMario:
         self.x, self.y = 50, 150
         self.timer = 0
         self.accumulate_dist = 0.0
+
         # 마리오가 방금 움직인 거리
         self.move_prev_dst = 0.0
         self.move_dist = 0.0
@@ -493,6 +505,11 @@ class CMario:
         # fill here
         self.event_que.insert(0, event)
         pass
+
+    def lateUpdate(self):
+
+        pass
+
 
     def update(self):
         # fill here
@@ -606,7 +623,7 @@ class CMario:
 
     def fire(self):
         makefire = Fire(self.x, self.y, self.dst * 3)
-        state_class.main_state.fire.append(makefire)
+        state_class.server.fire.append(makefire)
         game_world.add_object(makefire,1)
 
 

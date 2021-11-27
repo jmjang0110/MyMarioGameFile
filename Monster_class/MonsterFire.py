@@ -25,6 +25,9 @@ class MonsterFire:
         if MonsterFire.image == None:
             MonsterFire.image = load_image('mario_monster/mario_monster_sheet.png')
         self.x, self.y, self.velocity = x, y, RUN_SPEED_PPS * velocity
+
+        self.myState = True
+
         # 점프를 위한 변수
         self.Start_y = 150
 
@@ -60,6 +63,12 @@ class MonsterFire:
                                        self.image_Width,self.image_Height,0,'none',self.x,self.y,30,30)
 
         draw_rectangle(*self.get_bb())
+
+    def lateUpdate(self):
+
+        pass
+
+
 
     def update(self):
         self.x += self.velocity * game_framework.frame_time

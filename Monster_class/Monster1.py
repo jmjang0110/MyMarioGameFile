@@ -83,6 +83,9 @@ class Monster1:
 
         pass
 
+    def lateUpdate(self):
+
+        pass
 
     def update(self):
         if self.enable_Show == False:
@@ -103,12 +106,11 @@ class Monster1:
 
 
     def update_spot_byMarioMove(self, move_prev_dst):
-        if move_prev_dst > 0:
-            a = 0
-
         self.x -= move_prev_dst
         self.left_limit -= move_prev_dst
         self.right_limit -= move_prev_dst
+
+        # print('update_tileSpot_byMarioMove')
 
         pass
 
