@@ -36,16 +36,30 @@ def EraseMonster():
 
 def collideCheck_withFire():
     idx = 0
-
     # print('fire Num : ' ,len(state_class.server.fire))
     for k in range(len(CMonsterManager.MonsterData)):
-        for i in range(len(state_class.server.fire)):
+        for  i in range(len(state_class.server.fire)):
+
             if collide(state_class.server.fire[i], CMonsterManager.MonsterData[k]):
                 print("COLLISION")
-                state_class.server.fire[i].EraseMe()
+                if CMonsterManager.MonsterData[k].enable_Show == True:
+                    state_class.server.fire[i].EraseMe()
+
+                # 충돌 된 것이므로 HP Down
+                CMonsterManager.MonsterData[k].HPDown(state_class.server.fire[i].Attack)
+                # Mario Fire Delete
                 del state_class.server.fire[i]
+
                 # print('del fire Num : ', len(state_class.server.fire))
-                CMonsterManager.MonsterData[k].HPDown(250)
+                # 게임월드 내에 몬스터 remove
+                if CMonsterManager.MonsterData[k].EraseMe() == True:
+                    # CMonsterMAnager.MonsterData 내에 HP <= 0 인 Monster remove
+                    for m in range(len(CMonsterManager.MonsterData)):
+                        if m == CMonsterManager.MonsterData[k]:
+                            CMonsterManager.MonsterData.remove(m)
+                            del CMonsterManager.MonsterData[k]
+                            break
+
                 break
     idx += 1
 

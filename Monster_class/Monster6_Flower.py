@@ -69,10 +69,16 @@ class Monster6:
         pass
 
     def HPDown(self, Attack):
+        self.HP -= Attack
+
         pass
-        # self.HP -= Attack
+
+    def EraseMe(self):
         if self.HP <= 0:
+            self.enable_Show = False
             game_world.remove_object(self)
+
+        return self.enable_Show
         pass
     def get_bb(self):
         # fill here

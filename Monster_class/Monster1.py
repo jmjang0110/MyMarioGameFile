@@ -53,10 +53,17 @@ class Monster1:
 
         pass
 
-    def HPDown(self, Attack ):
+    def HPDown(self, Attack):
         self.HP -= Attack
+
+        pass
+
+    def EraseMe(self):
         if self.HP <= 0:
+            self.enable_Show = False
             game_world.remove_object(self)
+
+        return self.enable_Show
         pass
     def DieCheck(self):
         if self.HP <= 0:

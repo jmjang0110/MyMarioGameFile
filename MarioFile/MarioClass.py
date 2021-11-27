@@ -9,6 +9,7 @@ from MarioFile.Fire import *
 from state_class.main_state import *
 
 
+
 # fill expressions correctly
 PIXEL_PER_METER = (10.0 / 0.3 ) # 10 pixel 30 cm
 # R U N
@@ -35,10 +36,11 @@ FRAMES_PER_ACTION = 8 # 8장 프레임
 
 # dictionary 를 이용한 키매핑
 RIGHT_DOWN, LEFT_DOWN, RIGHT_UP, LEFT_UP, SLEEP_TIMER, \
-    DASH_TIMER, DASH_DOWN, DASH_UP, JUMP_UP, JUMP_TIMER , ATTACK= range(11)
+    DASH_TIMER, DASH_DOWN, DASH_UP, JUMP_UP, JUMP_TIMER_RUN_RIGHT, JUMP_TIMER_RUN_LEFT, JUMP_TIMER_IDLE, ATTACK= range(13)
 
 event_name = ['RIGHT_DOWN', 'LEFT_DOWN', 'RIGHT_UP', 'LEFT_UP', 'SLEEP_TIMER', \
-    'DASH_TIMER', 'DASH_DOWN', 'DASH_UP' , 'JUMP_UP', 'JUMP_TIMER','SPACE']
+                'DASH_TIMER', 'DASH_DOWN', 'DASH_UP' , 'JUMP_UP', 'JUMP_TIMER_RUN_RIGHT',\
+              'JUMP_TIMER_RUN_LEFT','JUMP_TIMER_IDLE', 'SPACE']
 
 
 
@@ -62,11 +64,17 @@ key_event_table = {
 
 class IdleState:
     def enter(Mario, event):
+        Mario.myState = IdleState
         # Mario.Speed = 0.0
         if event == RIGHT_DOWN:
             Mario.velocity += RUN_SPEED_PPS
+            if Mario.velocity < 0:
+                Mario.velocity *= -1
         elif event == LEFT_DOWN:
             Mario.velocity -= RUN_SPEED_PPS
+            if Mario.velocity > 0:
+                Mario.velocity *= -1
+
         elif event == RIGHT_UP:
             Mario.velocity -= RUN_SPEED_PPS
         elif event == LEFT_UP:
@@ -100,10 +108,15 @@ class IdleState:
 
 class RunState:
     def enter(Mario, event):
+        Mario.myState = RunState
         if event == RIGHT_DOWN:
-            Mario.velocity += RUN_SPEED_PPS
+            Mario.velocity = RUN_SPEED_PPS
+            if Mario.velocity < 0:
+                Mario.velocity *= -1
         elif event == LEFT_DOWN:
-            Mario.velocity -= RUN_SPEED_PPS
+            Mario.velocity = -RUN_SPEED_PPS
+            if Mario.velocity > 0:
+                Mario.velocity *= -1
         elif event == RIGHT_UP:
             Mario.velovity -= RUN_SPEED_PPS
         elif event == LEFT_UP:
@@ -200,6 +213,7 @@ class SleepState:
     def enter(Mario, event):
         Mario.frame = 0
 
+        Mario.myState = SleepState
 
     def exit(Mario , event):
         pass
@@ -226,7 +240,7 @@ class SleepState:
 
 class DashState:
     def enter(Mario, event):
-
+        Mario.myState = DashState
         if Mario.dst > 0:
             if event == DASH_DOWN:
                 Mario.velocity += DASH_SPEED_PPS
@@ -328,7 +342,8 @@ class JumpState:
 
         Mario.isJump = True
         Mario.posY = Mario.y
-        Mario.Before_State = Mario.cur_state
+        Mario.Before_State = Mario.myState
+
         pass
 
     def exit(Mario, event):
@@ -423,7 +438,8 @@ next_state_table = {
     JumpState: { DASH_DOWN: JumpState, DASH_UP: JumpState,
                  RIGHT_UP: JumpState, LEFT_UP: JumpState,
                  RIGHT_DOWN: JumpState, LEFT_DOWN: JumpState,
-                 JUMP_TIMER: RunState , JUMP_UP: JumpState,
+                 JUMP_TIMER_RUN_RIGHT: RunState, JUMP_TIMER_RUN_LEFT: RunState,
+                 JUMP_TIMER_IDLE: IdleState , JUMP_UP: JumpState,
                  ATTACK : JumpState}
 }
 
@@ -450,6 +466,7 @@ class CMario:
         #  이전 키 이벤트 테이블 저장
         self.Before_Key_event = None
         self.Before_State = IdleState
+        self.myState = IdleState
 
 
         #  마리오 관련 상태변수
@@ -587,8 +604,17 @@ class CMario:
 
         if self.y < self.Start_y:
             # self.add_event(key_event_table[self.Before_Key_event.type, self.Before_Key_event.key])
-            self.add_event(JUMP_TIMER)
-            self.cur_state = self.Before_State
+            if self.Before_State == IdleState:
+                self.add_event(JUMP_TIMER_IDLE)
+            elif self.Before_State == RunState:
+                if self.velocity >= 0:
+                    self.add_event(JUMP_TIMER_RUN_RIGHT)
+                if self.velocity < 0 :
+                    self.add_event(JUMP_TIMER_RUN_LEFT)
+            else :
+                self.add_event(JUMP_TIMER_RUN_RIGHT)
+
+            self.myState = self.Before_State
 
             self.jumpSpeed = 100
             self.jumpTime = 0

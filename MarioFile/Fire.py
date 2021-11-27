@@ -28,6 +28,7 @@ class Fire:
         if Fire.image == None:
             Fire.image = load_image('mario_mainCharacter/Fireball.png')
 
+        self.Attack = 250 # 공격력
 
         self.x, self.y, self.velocity = x, y, RUN_SPEED_PPS * velocity
         # 점프를 위한 변수
