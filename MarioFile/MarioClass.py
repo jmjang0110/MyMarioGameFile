@@ -1,5 +1,6 @@
 from pico2d import *
 
+import MapManager
 import state_class.main_state
 from myEnum import *
 import random
@@ -7,6 +8,9 @@ import game_framework
 import game_world
 from MarioFile.Fire import *
 from state_class.main_state import *
+
+import state_class.server
+import state_class.collision
 
 
 
@@ -36,11 +40,12 @@ FRAMES_PER_ACTION = 8 # 8장 프레임
 
 # dictionary 를 이용한 키매핑
 RIGHT_DOWN, LEFT_DOWN, RIGHT_UP, LEFT_UP, SLEEP_TIMER, \
-    DASH_TIMER, DASH_DOWN, DASH_UP, JUMP_UP, JUMP_TIMER_RUN_RIGHT, JUMP_TIMER_RUN_LEFT, JUMP_TIMER_IDLE, ATTACK= range(13)
+    DASH_TIMER, DASH_DOWN, DASH_UP, JUMP_UP, JUMP_TIMER_RUN_RIGHT, JUMP_TIMER_RUN_LEFT, JUMP_TIMER_IDLE, ATTACK,\
+    FALLING = range(14)
 
 event_name = ['RIGHT_DOWN', 'LEFT_DOWN', 'RIGHT_UP', 'LEFT_UP', 'SLEEP_TIMER', \
                 'DASH_TIMER', 'DASH_DOWN', 'DASH_UP' , 'JUMP_UP', 'JUMP_TIMER_RUN_RIGHT',\
-              'JUMP_TIMER_RUN_LEFT','JUMP_TIMER_IDLE', 'SPACE']
+              'JUMP_TIMER_RUN_LEFT','JUMP_TIMER_IDLE', 'SPACE','FALLING']
 
 
 
@@ -61,6 +66,62 @@ key_event_table = {
     (SDL_KEYDOWN, SDLK_SPACE) : JUMP_UP,
     (SDL_KEYDOWN, SDLK_a) : ATTACK
 }
+
+class Fallingstate:
+    def enter(Mario, event):
+        Mario.myState = Fallingstate
+        # Mario.Speed = 0.0
+        if event == RIGHT_DOWN:
+            Mario.velocity += RUN_SPEED_PPS
+            if Mario.velocity < 0:
+                Mario.velocity *= -1
+        elif event == LEFT_DOWN:
+            Mario.velocity -= RUN_SPEED_PPS
+            if Mario.velocity > 0:
+                Mario.velocity *= -1
+
+        elif event == RIGHT_UP:
+            Mario.velocity -= RUN_SPEED_PPS
+        elif event == LEFT_UP:
+            Mario.velocity += RUN_SPEED_PPS
+
+
+
+
+    def exit(Mario, event):
+        # if event == ATTACK:
+        #     Mario.fire()
+
+        pass
+
+    def do(Mario):
+        # frame 업데이트
+        # Mario.frame = (Mario.frame + 1) % 3
+        # Mario.frame = (Mario.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 8
+        Mario.goUp_just_moment -= game_framework.frame_time * RUN_SPEED_PPS
+        print('Mario Gu Up : ' ,Mario.goUp_just_moment)
+
+
+        #     기본적으로 마리오가 아래로 내려간다.
+        if Mario.fallCheck == True:
+            if Mario.y >= 0:
+                if Mario.goUp_just_moment >= 0:
+                    Mario.y += game_framework.frame_time * RUN_SPEED_PPS
+                else:
+                    Mario.y -= game_framework.frame_time * RUN_SPEED_PPS
+                    # Mario.y -= RUN_SPEED_PPS * game_framework.frame_time
+
+        if Mario.y <= 25:
+            state_class.main_state.MonsterData_Clear()
+            game_framework.change_state(state_class.title_state)
+
+
+    def draw(Mario):
+            Mario.image_left.clip_draw(0,588 - Mario.image_HEIGHT * 2 + 10, Mario.image_WIDTH,Mario.image_HEIGHT,
+                                             Mario.x, Mario.y, 100, 98)
+
+
+
 
 class IdleState:
     def enter(Mario, event):
@@ -95,6 +156,12 @@ class IdleState:
         if Mario.timer == 0:
             Mario.add_event(SLEEP_TIMER)
 
+
+        #     기본적으로 마리오가 아래로 내려간다.
+        if Mario.fallCheck == True:
+            if Mario.y >= 0:
+                Mario.y -= RUN_SPEED_PPS * game_framework.frame_time
+                Mario.add_event(FALLING)
     def draw(Mario):
         # 마리오 멈춤 / 왼쪽
         if Mario.direction == Direction.LEFT:
@@ -142,7 +209,11 @@ class RunState:
         # clmap 는 최댓값 최소값
         Mario.x = clamp(25, Mario.x, 1600 - 25)
 
-
+        #     기본적으로 마리오가 아래로 내려간다.
+        if Mario.fallCheck == True:
+            if Mario.y >= 0:
+                Mario.y -= RUN_SPEED_PPS * game_framework.frame_time
+                Mario.add_event(FALLING)
         # 대쉬 후에 원래 속도로 조절합니다.
         if Mario.velocity < -RUN_SPEED_PPS:
             Mario.velocity = -RUN_SPEED_PPS
@@ -197,6 +268,10 @@ class RunState:
         #    Mario.accumulate_dist = 0
         #    Mario.move_prev_dst = 0
         #    Mario.move_dist = 0
+
+           #     기본적으로 마리오가 아래로 내려간다.
+           if Mario.y >= 0:
+               Mario.y -= Mario.velocity * game_framework.frame_time
     def draw(Mario):
 
         # 마리오 : 오른쪽 / 이동
@@ -226,6 +301,10 @@ class SleepState:
             Mario.frame_Small = 3
         elif Mario.frame_Small == 3:
             Mario.frame_Small = 0
+
+        #     기본적으로 마리오가 아래로 내려간다.
+        if Mario.y >= 0:
+            Mario.y -= Mario.velocity * game_framework.frame_time
 
     def draw(Mario):
         # 마리오 멈춤 / 왼쪽
@@ -307,6 +386,11 @@ class DashState:
         else :
             Mario.ChangeDirection(Direction.RIGHT)
 
+        #     기본적으로 마리오가 아래로 내려간다.
+        if Mario.fallCheck == True:
+            if Mario.y >= 0:
+                Mario.y -= RUN_SPEED_PPS * game_framework.frame_time
+                Mario.add_event(FALLING)
 
     def draw(Mario):
 
@@ -367,7 +451,7 @@ class JumpState:
 
 
         Mario.timer -= 1
-        Mario.x += Mario.velocity * game_framework.frame_time
+        Mario.x += Mario.velocity * game_framework.frame_time + 0.25
         if Mario.x >= WINDOW_SIZE_WIDTH // 2:
             Mario.x -= Mario.velocity * game_framework.frame_time
 
@@ -386,6 +470,8 @@ class JumpState:
 
         if Mario.x < 0:
             Mario.x = 0
+
+
 
     def draw(Mario):
         # 마리오 : 왼쪽 / 점프
@@ -414,33 +500,39 @@ next_state_table = {
                 RIGHT_DOWN: RunState, LEFT_DOWN: RunState,
                 SLEEP_TIMER: SleepState, DASH_DOWN: IdleState,
                 DASH_UP: IdleState,JUMP_UP: JumpState,
-                ATTACK : IdleState},
+                ATTACK : IdleState, FALLING : Fallingstate},
 
     RunState: {RIGHT_UP: IdleState, LEFT_UP: IdleState,
                LEFT_DOWN: RunState, RIGHT_DOWN: RunState,
                DASH_DOWN : DashState,DASH_UP: RunState,
                JUMP_UP: JumpState,
-               ATTACK : RunState},
+               ATTACK : RunState, FALLING : Fallingstate},
 
     SleepState: {LEFT_DOWN: RunState, RIGHT_DOWN: RunState,
                  LEFT_UP: IdleState, RIGHT_UP: IdleState,
                  DASH_DOWN: SleepState, DASH_UP : SleepState,
                  JUMP_UP: JumpState,
-                 ATTACK : IdleState},
+                 ATTACK : IdleState,FALLING : Fallingstate},
 
     # cur_state : { event   : 들어갈 상태 }
     DashState: { DASH_DOWN: DashState, DASH_UP: RunState,
                  RIGHT_UP: IdleState, LEFT_UP: IdleState,
                  LEFT_DOWN: RunState, RIGHT_DOWN: RunState,
                  DASH_TIMER: RunState,JUMP_UP: JumpState,
-                 ATTACK : DashState},
+                 ATTACK : DashState,FALLING : Fallingstate},
 
     JumpState: { DASH_DOWN: JumpState, DASH_UP: JumpState,
                  RIGHT_UP: JumpState, LEFT_UP: JumpState,
                  RIGHT_DOWN: JumpState, LEFT_DOWN: JumpState,
                  JUMP_TIMER_RUN_RIGHT: RunState, JUMP_TIMER_RUN_LEFT: RunState,
                  JUMP_TIMER_IDLE: IdleState , JUMP_UP: JumpState,
-                 ATTACK : JumpState}
+                 ATTACK : JumpState},
+
+    Fallingstate: { DASH_DOWN: Fallingstate, DASH_UP: Fallingstate,
+                 RIGHT_UP: Fallingstate, LEFT_UP: Fallingstate,
+                 LEFT_DOWN: Fallingstate, RIGHT_DOWN: Fallingstate,
+                 DASH_TIMER: Fallingstate,JUMP_UP: Fallingstate,
+                 ATTACK : Fallingstate, FALLING : Fallingstate}
 }
 
 class CMario:
@@ -448,6 +540,7 @@ class CMario:
 
     def __init__(self):
         CMario.fireData = []
+        self.Stage = 1
 
         self.image_right = load_image('mario_mainCharacter/mario_right.png')    # 500 x 588
         self.image_left = load_image('mario_mainCharacter/mario_left.png')
@@ -484,6 +577,10 @@ class CMario:
         self.frame, self.frame_dst = 0, 1
         self.frame_Small, self.frame_Small_dst = 0, 1
         self.frame_Small_use = 0
+
+        self.fallCheck = False
+        self.collidePlane = PLANE.START
+        self.goUp_just_moment = 50 # 마리오가 떨어졌을 때 잠깐 올라갔다가 떨어집니다.
 
 
         # 점프를 위한 변수
@@ -538,6 +635,20 @@ class CMario:
             self.cur_state.enter(self, event)
 
             print('state : ' + self.cur_state.__name__ + 'Event : ', event_name[event])
+
+        # 마리오가 맵 타일과 부딪 치는
+        if self.fallCheck == True:
+            pass
+
+        if self.Stage == 1:
+            for tile in MapManager.MapTileManager.mapTile_Data_1[0]:
+                self.collidePlane = state_class.collision.collide_plane(tile, self)
+                if self.collidePlane == PLANE.NONE:
+                    self.fallCheck = True
+
+                elif self.collidePlane == PLANE.UP:
+                    self.fallCheck = False
+                    break
 
         pass
 
@@ -602,7 +713,7 @@ class CMario:
 
         # print(self.jumpTime, '  ',  self.jumpPower)
 
-        if self.y < self.Start_y:
+        if self.y < self.Start_y - 10:
             # self.add_event(key_event_table[self.Before_Key_event.type, self.Before_Key_event.key])
             if self.Before_State == IdleState:
                 self.add_event(JUMP_TIMER_IDLE)
@@ -623,10 +734,23 @@ class CMario:
             self.y = self.Start_y
             self.jumpdirection = Direction.UP
             self.jumpTime_dir = 1
+
             if self.Stop_After_Jump == True:
                 self.direction = Direction.STOP
                 self.Stop_After_Jump = False
 
+            if self.Stage == 1:
+                # 마리오가 맵 타일과 부딪 치는
+                for tile in MapManager.MapTileManager.mapTile_Data_1[0]:
+                    self.collidePlane = state_class.collision.collide_plane(tile, self)
+                    if self.collidePlane == PLANE.NONE:
+                        self.fallCheck = True
+                    elif self.collidePlane == PLANE.UP:
+                        self.fallCheck = False
+                        break
+
+                if self.fallCheck == True:
+                    self.add_event(FALLING)
 
         #   캐릭터의 방향을 바꿉니다.
     def ChangeDirection(self, NewDirection):

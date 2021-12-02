@@ -20,7 +20,7 @@ class PLANE(Enum):
     UP = 1,
     DOWN = 2,
     LEFT = 3,
-    RIGHT = 4
-
+    RIGHT = 4,
+    START = 5
 WINDOW_SIZE_WIDTH = 1200
 WINDOW_SIZE_HEIGHT = 600

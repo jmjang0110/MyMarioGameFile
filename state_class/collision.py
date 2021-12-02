@@ -1,5 +1,6 @@
 
 from myEnum import *
+import state_class.server
 
 
 # 충돌 체크
@@ -19,6 +20,8 @@ def collide(a, b):
 # 충돌 체크 후 부딪힌 면을 반환
 def collide_plane(a, b):
 
+    #  tile : a // mario : b
+
     #  a 와 b 가 부딪 쳤을 때
     #  b 기준으로 부딪친 면을 반환한다.
 
@@ -34,9 +37,10 @@ def collide_plane(a, b):
     if (left_a <= right_b and right_b <= right_a) or (left_a <= left_b and left_b <= right_a):
             # 1. 윗면과 부딪쳤을 때
             if top_a >= bottom_b and bottom_b >= bottom_a:
-                b.y = top_a + b.halfsize
+                b.y = top_a
                 return PLANE.UP
-            # 2. 윗면과 부딪쳤을 때
+            # 2. 아랫면과 부딪쳤을 때
             elif top_b >= bottom_a and bottom_b < bottom_a:
-                b.jumpTime_dir = -1
+                if b == state_class.server.mario:
+                    b.jumpTime_dir = -1
                 return PLANE.DOWN

@@ -28,6 +28,12 @@ name = "MainState"
 
 
 
+def MonsterData_Clear():
+   CMonsterManager.MonsterData.clear()
+
+
+
+
 def EraseMonster():
     for i in range(len(CMonsterManager.MonsterData)):
         if CMonsterManager.MonsterData[i].DieCheck():
@@ -35,7 +41,7 @@ def EraseMonster():
         break
 
 def collideCheck_withFire():
-    idx = 0
+
     # print('fire Num : ' ,len(state_class.server.fire))
     for k in range(len(CMonsterManager.MonsterData)):
         for  i in range(len(state_class.server.fire)):
@@ -61,22 +67,20 @@ def collideCheck_withFire():
                             break
 
                 break
-    idx += 1
-
 
     pass
 
 def collideCheck():
     # 아이템 박스와 충돌 체크
-    idx = 0
-    for num in MapManager.MapTileManager.MapData[2]:
-        # 아이템과 충돌 체크
-        if num == 3 or num == 5:
-            if collide(state_class.server.mario, MapManager.MapTileManager.mapTile_Data[2][idx]):
-                MapManager.MapTileManager.mapTile_Data[2][idx].collidenum -= 1
-                state_class.server.mario.jumpCollide_item()
-
-        idx += 1
+    if state_class.server.mario.Stage == 1:
+        idx = 0
+        for num in MapManager.MapTileManager.MapData_1[2]:
+            # 아이템과 충돌 체크
+            if num == 3 or num == 5:
+                if collide(state_class.server.mario, MapManager.MapTileManager.mapTile_Data_1[2][idx]):
+                    MapManager.MapTileManager.mapTile_Data_1[2][idx].collidenum -= 1
+                    state_class.server.mario.jumpCollide_item()
+            idx += 1
 
     # 마리오의 Fire 와 몬스터와의 충돌 체크
     # 1층 에서의 충돌 체크

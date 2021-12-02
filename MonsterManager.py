@@ -47,9 +47,24 @@ class CMonsterManager():
         self.pivot_x = 0
         self.pivot_y = 125
 
-        CMonsterManager.MapData = MapManager.MapTileManager.MapData
+        CMonsterManager.MapData = MapManager.MapTileManager.MapData_1
 
         pass
+
+    # Stage 가 바뀌면서 몬스터 정보도 업데이트 합니다.
+    def Change_Stage(self, stage):
+        CMonsterManager.MapData.clear()
+        CMonsterManager.MonsterData.clear()
+
+
+        if stage == 1:
+            CMonsterManager.MapData = MapManager.MapTileManager.MapData_1
+        elif stage == 2:
+            CMonsterManager.MapData = MapManager.MapTileManager.MapData_2
+        elif stage == 3:
+            CMonsterManager.MapData = MapManager.MapTileManager.MapData_3
+
+        self.create_Monster()
 
 
     def create_Monster(self):
@@ -63,32 +78,32 @@ class CMonsterManager():
                     Monsterindex = random.randint(1,5)
                     if Monsterindex == 1:
                         monster = Monster1()
-                        monster.setSpot(MapTileManager.mapTile_Data[i][j].x, MapTileManager.mapTile_Data[i][j].y + 10,
-                                        MapTileManager.mapTile_Data[i][j].Tile_Width_size // 2,
-                                        MapTileManager.mapTile_Data[i][j].Tile_Width_size // 2)
+                        monster.setSpot(MapTileManager.mapTile_Data_1[i][j].x, MapTileManager.mapTile_Data_1[i][j].y + 10,
+                                        MapTileManager.mapTile_Data_1[i][j].Tile_Width_size // 2,
+                                        MapTileManager.mapTile_Data_1[i][j].Tile_Width_size // 2)
                     elif Monsterindex == 2:
                         monster = Monster2()
-                        monster.setSpot(MapTileManager.mapTile_Data[i][j].x, MapTileManager.mapTile_Data[i][j].y + 40,
-                                        MapTileManager.mapTile_Data[i][j].Tile_Width_size // 2,
-                                        MapTileManager.mapTile_Data[i][j].Tile_Width_size // 2)
+                        monster.setSpot(MapTileManager.mapTile_Data_1[i][j].x, MapTileManager.mapTile_Data_1[i][j].y + 40,
+                                        MapTileManager.mapTile_Data_1[i][j].Tile_Width_size // 2,
+                                        MapTileManager.mapTile_Data_1[i][j].Tile_Width_size // 2)
                     elif Monsterindex == 3:
                         monster = Monster3()
-                        monster.setSpot(MapTileManager.mapTile_Data[i][j].x, MapTileManager.mapTile_Data[i][j].y + 20,
-                                        MapTileManager.mapTile_Data[i][j].Tile_Width_size // 2,
-                                        MapTileManager.mapTile_Data[i][j].Tile_Width_size // 2)
+                        monster.setSpot(MapTileManager.mapTile_Data_1[i][j].x, MapTileManager.mapTile_Data_1[i][j].y + 20,
+                                        MapTileManager.mapTile_Data_1[i][j].Tile_Width_size // 2,
+                                        MapTileManager.mapTile_Data_1[i][j].Tile_Width_size // 2)
 
                     elif Monsterindex == 4:
                         monster = Monster4()
-                        monster.setSpot(MapTileManager.mapTile_Data[i][j].x, MapTileManager.mapTile_Data[i][j].y + 20,
-                                        MapTileManager.mapTile_Data[i][j].Tile_Width_size // 2,
-                                        MapTileManager.mapTile_Data[i][j].Tile_Width_size // 2)
+                        monster.setSpot(MapTileManager.mapTile_Data_1[i][j].x, MapTileManager.mapTile_Data_1[i][j].y + 20,
+                                        MapTileManager.mapTile_Data_1[i][j].Tile_Width_size // 2,
+                                        MapTileManager.mapTile_Data_1[i][j].Tile_Width_size // 2)
                     if Monsterindex != 5:
                         CMonsterManager.MonsterData.append(monster)
                         game_world.add_object(monster, 1)
 
                 elif CMonsterManager.MapData[i][j] == 2:
                     monster = Monster6()
-                    monster.setSpot(MapTileManager.mapTile_Data[i][j].x - 40, MapTileManager.mapTile_Data[i][j].y - 30,0,0)
+                    monster.setSpot(MapTileManager.mapTile_Data_1[i][j].x - 40, MapTileManager.mapTile_Data_1[i][j].y - 30,0,0)
                     CMonsterManager.MonsterData.append(monster)
                     game_world.add_object(monster, 1)
 
