@@ -9,7 +9,7 @@ import game_world
 from MarioFile.Fire import *
 from state_class.main_state import *
 
-import state_class.server
+from state_class.server import *
 import state_class.collision
 
 
@@ -99,7 +99,7 @@ class Fallingstate:
         # Mario.frame = (Mario.frame + 1) % 3
         # Mario.frame = (Mario.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 8
         Mario.goUp_just_moment -= game_framework.frame_time * RUN_SPEED_PPS
-        print('Mario Gu Up : ' ,Mario.goUp_just_moment)
+        print('Mario::Fallingstate::do Go Up : ' ,Mario.goUp_just_moment)
 
 
         #     기본적으로 마리오가 아래로 내려간다.
@@ -112,6 +112,11 @@ class Fallingstate:
                     # Mario.y -= RUN_SPEED_PPS * game_framework.frame_time
 
         if Mario.y <= 25:
+            state_class.main_state.MonsterData_Clear()
+            game_framework.change_state(state_class.title_state)
+
+        #     버그가 있을 경우 이 조건문으로 종료
+        if Mario.goUp_just_moment <= -300.0:
             state_class.main_state.MonsterData_Clear()
             game_framework.change_state(state_class.title_state)
 
@@ -682,7 +687,7 @@ class CMario:
 
         # 마리오 플레이 월드 상태 출력
         self.font.draw(self.x - 60, self.y + 50, '(Time: %3.2f)' % get_time(), (255, 255, 0))
-        self.font.draw(100, WINDOW_SIZE_HEIGHT - 20, 'WORLD : STAGE 1', (255,255,255))
+        self.font.draw(100, WINDOW_SIZE_HEIGHT - 20, 'WORLD : STAGE %d' % self.Stage, (255,255,255))
         self.font.draw(100 + 200, WINDOW_SIZE_HEIGHT - 20, 'x : %2d' % self.cointPoint, (255, 255, 255))
         self.font.draw(100 + 400, WINDOW_SIZE_HEIGHT - 20, 'TIME : %3.2f' % get_time(), (255, 255, 255))
         self.image_Coin.clip_draw(1, 96,15,16, 100 + 190, WINDOW_SIZE_HEIGHT - 20, 20,20 )

@@ -15,6 +15,8 @@ from MapManagerFile.GreenSewer import *
 from MapManagerFile.itemclass import *
 from MapManagerFile.CastleClass import *
 from MapManagerFile.mountainClass import *
+from MapManagerFile.mountainClass2 import *
+
 
 
 
@@ -80,7 +82,7 @@ class MapTileManager:
         #                   S T A G E 2
         # ========================================================
         # 2 층
-        MapTileManager.MapData_2[1] = [0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0,
+        MapTileManager.MapData_2[1] = [0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0,
                                        1,
                                        0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0]
         # 중간 3 : 코인 , 2 : 초록 하수구
@@ -88,32 +90,15 @@ class MapTileManager:
                                        0,
                                        0, 0, 0, 2, 3, 3, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         # 1 층
-        MapTileManager.MapData_2[0] = [1, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 0, 0, 0,
+        MapTileManager.MapData_2[0] = [1, 1, 1, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 0, 0, 0,
                                        1,
                                        1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 0, 0, 4, 0]
 
         pass
 
-    def create_tileSpot(self):
-        # print('create_tileSpot')
-        for i in range(ROW):
-            for j in range(COLUM):
-                if MapTileManager.MapData_1[i][j] == 1:
-                    MapTileManager.mapTile_Data_1[i][j] = MapTile()
-                elif MapTileManager.MapData_1[i][j] == 2:
-                    MapTileManager.mapTile_Data_1[i][j] = CGreenSewer()
-
-                elif MapTileManager.MapData_1[i][j] == 3:
-                    MapTileManager.mapTile_Data_1[i][j] = ItemClass()
-                elif MapTileManager.MapData_1[i][j] == 4:
-                    MapTileManager.mapTile_Data_1[i][j] = myCastle()
-
-                MapTileManager.mapTile_Data_1[i][j].setPivot(self.MapStart_x, self.MapStart_y, i, j)
 
 
-        pass
-
-    def create_tileSpot2(self):
+    def create_tileSpot_Stage1(self):
         for i in range(ROW -1):
             self.pivot_x = 0
             for j in range(COLUM-1):
@@ -163,6 +148,56 @@ class MapTileManager:
 
         pass
 
+    def create_tileSpot_Stage2(self):
+
+        for i in range(ROW -1):
+            self.pivot_x = 0
+            for j in range(COLUM-1):
+                if MapTileManager.MapData_2[i][j] == 0:
+                    self.pivot_x += 25
+                elif MapTileManager.MapData_2[i][j] == 1:
+                    self.pivot_x += 100 * MapTileManager.MapData_2[i][j]
+                elif MapTileManager.MapData_2[i][j] == 2:
+                    self.pivot_x += 100
+                elif MapTileManager.MapData_2[i][j] == 3:
+                    self.pivot_x += 50
+                elif MapTileManager.MapData_2[i][j] == 5:
+                    self.pivot_x += 25
+
+                if MapTileManager.MapData_2[i][j] == 1:
+                    MapTileManager.mapTile_Data_2[i][j] = MapTile()
+                    MapTileManager.mapTile_Data_2[i][j].setPivot2(self.pivot_x, self.pivot_y, 1)
+
+                elif MapTileManager.MapData_2[i][j] == 2:
+                    MapTileManager.mapTile_Data_2[i][j] = CGreenSewer()
+                    MapTileManager.mapTile_Data_2[i][j].setPivot2(self.pivot_x, self.pivot_y- 330, 1)
+
+                elif MapTileManager.MapData_2[i][j] == 3:
+                    MapTileManager.mapTile_Data_2[i][j] = ItemClass()
+                    MapTileManager.mapTile_Data_2[i][j].setPivot2(self.pivot_x, self.pivot_y- 150 - 50, 1)
+
+
+                elif MapTileManager.MapData_2[i][j] == 4:
+                    MapTileManager.mapTile_Data_2[i][j] = myCastle()
+                    MapTileManager.mapTile_Data_2[i][j].setPivot2(self.pivot_x, self.pivot_y + 165, 1)
+
+                elif MapTileManager.MapData_2[i][j] == 5:
+                    MapTileManager.mapTile_Data_2[i][j] = ItemClass()
+                    MapTileManager.mapTile_Data_2[i][j].setPivot2(self.pivot_x, self.pivot_y - 30, 1)
+
+                if MapTileManager.MapData_2[i][j] == 0:
+                    self.pivot_x += 25
+                elif MapTileManager.MapData_2[i][j] == 1:
+                    self.pivot_x += 100 * MapTileManager.MapData_2[i][j]
+                elif MapTileManager.MapData_2[i][j] == 2:
+                    self.pivot_x += 100
+                elif MapTileManager.MapData_2[i][j] == 3:
+                    self.pivot_x += 10
+                elif MapTileManager.MapData_2[i][j] == 5:
+                    self.pivot_x += 25
+            self.pivot_y += 200
+
+        pass
     def update_tileSpot(self):
 
         pass
@@ -181,6 +216,13 @@ class MapTileManager:
                 for j in range(COLUM - 1):
                     MapTileManager.mapTile_Data_1[i][j].update_spot_byMarioMove(state_class.server.mario.move_prev_dst * 2.0)
 
+        if state_class.server.mario.Stage == 2:
+            # print('update tilespot')
+            for i in range(ROW - 1):
+                for j in range(COLUM - 1):
+                    MapTileManager.mapTile_Data_2[i][j].update_spot_byMarioMove(
+                        state_class.server.mario.move_prev_dst * 2.0)
+
     def lateUpdate(self):
         # 마리오 움직임에 따라 타일들을 움직입니다.
         self.update_tileSpot_byMarioMove()
@@ -188,20 +230,29 @@ class MapTileManager:
         pass
 
     def update(self):
-        for j in range(COLUM - 1):
-            if MapTileManager.MapData_1[2][j] == 3 or MapTileManager.MapData_1[2][j] == 5:
-               MapTileManager.mapTile_Data_1[2][j].update()
-
+        if state_class.server.mario.Stage == 1:
+            for j in range(COLUM - 1):
+                if MapTileManager.MapData_1[2][j] == 3 or MapTileManager.MapData_1[2][j] == 5:
+                   MapTileManager.mapTile_Data_1[2][j].update()
+        if state_class.server.mario.Stage == 2:
+            for j in range(COLUM - 1):
+                if MapTileManager.MapData_2[2][j] == 3 or MapTileManager.MapData_2[2][j] == 5:
+                    MapTileManager.mapTile_Data_2[2][j].update()
 
         pass
 
     def draw(self):
-        for i in range(ROW -1 ):
-            for j in range(COLUM - 1):
-                if MapTileManager.MapData_1[i][j] != 0:
-                    MapTileManager.mapTile_Data_1[i][j].draw()
+        if state_class.server.mario.Stage == 1:
+            for i in range(ROW -1 ):
+                for j in range(COLUM - 1):
+                    if MapTileManager.MapData_1[i][j] != 0:
+                        MapTileManager.mapTile_Data_1[i][j].draw()
 
-
+        if state_class.server.mario.Stage == 2:
+            for i in range(ROW - 1):
+                for j in range(COLUM - 1):
+                    if MapTileManager.MapData_1[i][j] != 0:
+                        MapTileManager.mapTile_Data_1[i][j].draw()
 
         pass
 

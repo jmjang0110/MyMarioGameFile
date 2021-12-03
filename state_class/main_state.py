@@ -67,7 +67,6 @@ def collideCheck_withFire():
                             break
 
                 break
-
     pass
 
 def collideCheck():
@@ -126,7 +125,11 @@ def enter():
 
     state_class.server.mapManager = MapManager.MapTileManager()
     state_class.server.mapManager.create_TileMap_byHand()
-    state_class.server.mapManager.create_tileSpot2()
+
+    # S T A G E - I N I T
+    state_class.server.mapManager.create_tileSpot_Stage1()
+    state_class.server.mapManager.create_tileSpot_Stage2()
+    # state_class.server.mapManager.create_tileSpot_Stage3()
 
     state_class.server.monsterManager = CMonsterManager()
     state_class.server.monsterManager.create_Monster()

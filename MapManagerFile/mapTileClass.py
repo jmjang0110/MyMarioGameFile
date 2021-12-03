@@ -1,6 +1,10 @@
 from pico2d import *
+
+import state_class.server
 from myEnum import *
 import random
+
+from state_class.server import *
 
 
 class MapTile:
@@ -22,6 +26,7 @@ class MapTile:
         # Tile Size in Game World
         self.Tile_Width_size = 200
         self.Tile_Height_size = 50
+
 
     def get_bb(self):
         # fill here
@@ -63,12 +68,22 @@ class MapTile:
 
     def draw(self):
 
+        if state_class.server.mario.Stage == 1:
+            # print(self.tileLength)
+            if self.tileLength == 1:
+                self.mapTileImage.clip_draw(15, 448 - self.image_HEIGHT, self.image_WIDTH, self.image_HEIGHT,
+                                            self.x, self.y, self.Tile_Width_size, self.Tile_Height_size)
+            elif self.tileLength == 2:
+                self.mapTileImage.clip_draw(15, 448 - self.image_HEIGHT, self.image_WIDTH, self.image_HEIGHT,
+                                            self.x, self.y, self.Tile_Width_size * 2, self.Tile_Height_size)
+            draw_rectangle(*self.get_bb())
 
-        # print(self.tileLength)
-        if self.tileLength == 1:
-            self.mapTileImage.clip_draw(15, 448 - self.image_HEIGHT,self.image_WIDTH, self.image_HEIGHT,
-                                        self.x,self.y ,self.Tile_Width_size ,self.Tile_Height_size)
-        elif self.tileLength == 2:
-            self.mapTileImage.clip_draw(15, 448 - self.image_HEIGHT,self.image_WIDTH, self.image_HEIGHT,
-                                        self.x,self.y ,self.Tile_Width_size * 2,self.Tile_Height_size)
-        draw_rectangle(*self.get_bb())
+        elif state_class.server.mario.Stage == 2:
+            # print(self.tileLength)
+            if self.tileLength == 1:
+                self.mapTileImage.clip_draw(15, 448 - self.image_HEIGHT * 3, self.image_WIDTH, self.image_HEIGHT,
+                                            self.x, self.y, self.Tile_Width_size, self.Tile_Height_size)
+            elif self.tileLength == 2:
+                self.mapTileImage.clip_draw(15, 448 - self.image_HEIGHT, self.image_WIDTH, self.image_HEIGHT,
+                                            self.x, self.y, self.Tile_Width_size * 2, self.Tile_Height_size)
+            draw_rectangle(*self.get_bb())
