@@ -165,6 +165,7 @@ class IdleState:
         #     기본적으로 마리오가 아래로 내려간다.
         if Mario.fallCheck == True:
             if Mario.y >= 0:
+
                 Mario.y -= RUN_SPEED_PPS * game_framework.frame_time
                 Mario.add_event(FALLING)
     def draw(Mario):
@@ -545,7 +546,7 @@ class CMario:
 
     def __init__(self):
         CMario.fireData = []
-        self.Stage = 1
+        self.Stage = 2
 
         self.image_right = load_image('mario_mainCharacter/mario_right.png')    # 500 x 588
         self.image_left = load_image('mario_mainCharacter/mario_left.png')
@@ -654,6 +655,15 @@ class CMario:
                 elif self.collidePlane == PLANE.UP:
                     self.fallCheck = False
                     break
+        if self.Stage == 2:
+            for tile in MapManager.MapTileManager.mapTile_Data_2[0]:
+                self.collidePlane = state_class.collision.collide_plane(tile, self)
+                if self.collidePlane == PLANE.NONE:
+                    self.fallCheck = True
+
+                elif self.collidePlane == PLANE.UP:
+                    self.fallCheck = False
+                    break
 
         pass
 
@@ -747,6 +757,18 @@ class CMario:
             if self.Stage == 1:
                 # 마리오가 맵 타일과 부딪 치는
                 for tile in MapManager.MapTileManager.mapTile_Data_1[0]:
+                    self.collidePlane = state_class.collision.collide_plane(tile, self)
+                    if self.collidePlane == PLANE.NONE:
+                        self.fallCheck = True
+                    elif self.collidePlane == PLANE.UP:
+                        self.fallCheck = False
+                        break
+
+                if self.fallCheck == True:
+                    self.add_event(FALLING)
+            if self.Stage == 2:
+                # 마리오가 맵 타일과 부딪 치는
+                for tile in MapManager.MapTileManager.mapTile_Data_2[0]:
                     self.collidePlane = state_class.collision.collide_plane(tile, self)
                     if self.collidePlane == PLANE.NONE:
                         self.fallCheck = True

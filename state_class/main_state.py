@@ -70,8 +70,8 @@ def collideCheck_withFire():
     pass
 
 def collideCheck():
-    # 아이템 박스와 충돌 체크
     if state_class.server.mario.Stage == 1:
+        # 아이템 박스와 충돌 체크
         idx = 0
         for num in MapManager.MapTileManager.MapData_1[2]:
             # 아이템과 충돌 체크
@@ -81,10 +81,25 @@ def collideCheck():
                     state_class.server.mario.jumpCollide_item()
             idx += 1
 
-    # 마리오의 Fire 와 몬스터와의 충돌 체크
-    # 1층 에서의 충돌 체크
-    collideCheck_withFire()
-    EraseMonster()
+        # 마리오의 Fire 와 몬스터와의 충돌 체크
+        # 1층 에서의 충돌 체크
+        collideCheck_withFire()
+        EraseMonster()
+    elif state_class.server.mario.Stage == 2:
+        # 아이템 박스와 충돌 체크
+        idx = 0
+        for num in MapManager.MapTileManager.MapData_2[2]:
+             # 아이템과 충돌 체크
+             if num == 3 or num == 5:
+                if collide(state_class.server.mario, MapManager.MapTileManager.mapTile_Data_2[2][idx]):
+                    MapManager.MapTileManager.mapTile_Data_2[2][idx].collidenum -= 1
+                    state_class.server.mario.jumpCollide_item()
+                idx += 1
+
+        # 마리오의 Fire 와 몬스터와의 충돌 체크
+        # 1층 에서의 충돌 체크
+        collideCheck_withFire()
+        EraseMonster()
     pass
 
 def lateUpdate():
@@ -117,6 +132,10 @@ def collide(a, b):
 def enter():
     state_class.server.mario = CMario()
     state_class.server.backGround = CBackGround()
+
+    state_class.server.backGround.ChangeStage(state_class.server.mario.Stage)
+
+
     state_class.server.monster1 = Monster1()
     state_class.server.monster2 = Monster2()
     state_class.server.monster3 = Monster3()
@@ -132,7 +151,9 @@ def enter():
     # state_class.server.mapManager.create_tileSpot_Stage3()
 
     state_class.server.monsterManager = CMonsterManager()
-    state_class.server.monsterManager.create_Monster()
+    state_class.server.monsterManager.create_Monster_Stage1()
+
+    state_class.server.monsterManager.Change_Stage(state_class.server.mario.Stage)
 
     game_world.add_object(state_class.server.backGround, 0)
     game_world.add_object(state_class.server.mapManager, 0)

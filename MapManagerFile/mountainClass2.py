@@ -69,7 +69,7 @@ class MyMountain_Stage2:
         # print(self.tileLength)
         if self.tileLength == 1:
             self.mountainImage.clip_draw(0, 0,self.image_WIDTH, self.image_HEIGHT,
-                                        self.x,self.y  ,self.Tile_Width_size ,self.Tile_Height_size)
+                                        self.x,self.y + 125 ,self.Tile_Width_size ,self.Tile_Height_size)
         elif self.tileLength == 2:
             self.mountainImage.clip_draw(0, 0,self.image_WIDTH, self.image_HEIGHT,
                                         self.x,self.y ,self.Tile_Width_size * 2,self.Tile_Height_size)

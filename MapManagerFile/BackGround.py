@@ -34,14 +34,15 @@ class CBackGround:
             self.mountain_start_x += self.mountains[i].image_WIDTH * 2
 
         #  S T A G E 2 Mountains
+        self.mountain_start_x = 0.0
         self.mountains2 = [MyMountain_Stage2() for i in range(5)]
         for i in range(len(self.mountains2)):
             self.mountains2[i].setPivot2(self.mountain_start_x, 110, 1)
-            self.mountain_start_x += self.mountains2[i].image_WIDTH * 2
+            self.mountain_start_x += self.mountains2[i].image_WIDTH
 
         pass
 
-    def ChangeStage(self,stage):
+    def ChangeStage(self, stage):
         if state_class.server.mario.Stage == 1:
             self.BackGround_1 = self.BackGround_Stage1
             self.BackGround_1_Pivot_x = WINDOW_SIZE_WIDTH / 2

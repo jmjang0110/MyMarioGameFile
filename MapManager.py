@@ -82,11 +82,11 @@ class MapTileManager:
         #                   S T A G E 2
         # ========================================================
         # 2 층
-        MapTileManager.MapData_2[1] = [0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0,
+        MapTileManager.MapData_2[1] = [0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0,
                                        1,
                                        0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0]
         # 중간 3 : 코인 , 2 : 초록 하수구
-        MapTileManager.MapData_2[2] = [0, 0, 3, 3, 3, 0, 0, 5, 5, 0, 0, 0, 0, 2, 3, 3, 0, 2, 0, 3, 3, 3, 0, 2, 0, 0, 0,
+        MapTileManager.MapData_2[2] = [0, 0, 0, 0, 3, 0, 0, 5, 5, 0, 0, 0, 0, 2, 3, 3, 0, 2, 0, 3, 3, 3, 0, 2, 0, 0, 0,
                                        0,
                                        0, 0, 0, 2, 3, 3, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         # 1 층
@@ -99,6 +99,13 @@ class MapTileManager:
 
 
     def create_tileSpot_Stage1(self):
+
+        self.MapStart_x = 100
+        self.MapStart_y = 25
+
+        self.pivot_x = 0
+        self.pivot_y = 125
+
         for i in range(ROW -1):
             self.pivot_x = 0
             for j in range(COLUM-1):
@@ -149,6 +156,13 @@ class MapTileManager:
         pass
 
     def create_tileSpot_Stage2(self):
+
+        self.MapStart_x = 100
+        self.MapStart_y = 25
+
+        self.pivot_x = 0
+        self.pivot_y = 125
+
 
         for i in range(ROW -1):
             self.pivot_x = 0
@@ -248,11 +262,11 @@ class MapTileManager:
                     if MapTileManager.MapData_1[i][j] != 0:
                         MapTileManager.mapTile_Data_1[i][j].draw()
 
-        if state_class.server.mario.Stage == 2:
+        elif state_class.server.mario.Stage == 2:
             for i in range(ROW - 1):
                 for j in range(COLUM - 1):
-                    if MapTileManager.MapData_1[i][j] != 0:
-                        MapTileManager.mapTile_Data_1[i][j].draw()
+                    if MapTileManager.MapData_2[i][j] != 0:
+                        MapTileManager.mapTile_Data_2[i][j].draw()
 
         pass
 
