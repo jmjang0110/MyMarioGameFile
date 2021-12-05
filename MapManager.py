@@ -90,9 +90,8 @@ class MapTileManager:
                                        0,
                                        0, 0, 0, 2, 3, 3, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         # 1 층
-        MapTileManager.MapData_2[0] = [1, 1, 1, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 0, 0, 0,
-                                       1,
-                                       1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 0, 0, 4, 0]
+        MapTileManager.MapData_2[0] = [1, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 0, 0, 0, 1,
+                                     1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 0, 0, 4, 0]
 
         pass
 
@@ -156,13 +155,6 @@ class MapTileManager:
         pass
 
     def create_tileSpot_Stage2(self):
-
-        self.MapStart_x = 100
-        self.MapStart_y = 25
-
-        self.pivot_x = 0
-        self.pivot_y = 125
-
 
         for i in range(ROW -1):
             self.pivot_x = 0

@@ -27,6 +27,8 @@ import state_class.server
 name = "MainState"
 
 
+MyStage = 1
+start = 1
 
 def MonsterData_Clear():
    CMonsterManager.MonsterData.clear()
@@ -128,13 +130,27 @@ def collide(a, b):
 
     return True
 
+def changeStage(stage):
+    game_world.clear()
+
+
+
+
 
 def enter():
+    global start , MyStage
+
+    if start == 1:
+        MyStage = 1
+    else :
+        MyStage = 2
+    start = 2
+
+    game_world.clear()
     state_class.server.mario = CMario()
+    state_class.server.mario.Stage = MyStage
     state_class.server.backGround = CBackGround()
-
     state_class.server.backGround.ChangeStage(state_class.server.mario.Stage)
-
 
     state_class.server.monster1 = Monster1()
     state_class.server.monster2 = Monster2()
@@ -142,19 +158,27 @@ def enter():
     state_class.server.monster4 = Monster4()
     state_class.server.maptile1 = MapTile()
 
+
+
+    # S T A G E - M A P
     state_class.server.mapManager = MapManager.MapTileManager()
     state_class.server.mapManager.create_TileMap_byHand()
 
-    # S T A G E - I N I T
-    state_class.server.mapManager.create_tileSpot_Stage1()
-    state_class.server.mapManager.create_tileSpot_Stage2()
+    if state_class.server.mario.Stage == 1:
+        state_class.server.mapManager.create_tileSpot_Stage1()
+    if state_class.server.mario.Stage == 2:
+        state_class.server.mapManager.create_tileSpot_Stage2()
     # state_class.server.mapManager.create_tileSpot_Stage3()
 
+    # M O N S T E R
     state_class.server.monsterManager = CMonsterManager()
-    state_class.server.monsterManager.create_Monster_Stage1()
 
-    state_class.server.monsterManager.Change_Stage(state_class.server.mario.Stage)
+    if state_class.server.mario.Stage == 1:
+        state_class.server.monsterManager.create_Monster_Stage1()
+    if state_class.server.mario.Stage == 2:
+        state_class.server.monsterManager.create_Monster_Stage2()
 
+    # A D D _ GAME WORLD
     game_world.add_object(state_class.server.backGround, 0)
     game_world.add_object(state_class.server.mapManager, 0)
     game_world.add_object(state_class.server.monsterManager,0)
@@ -165,6 +189,10 @@ def enter():
     # game_world.add_object(monster4, 1)
     game_world.add_object(state_class.server.mario, 1)
 
+
+
+    # state_class.server.backGround.ChangeStage(state_class.server.mario.Stage)
+    # state_class.server.monsterManager.Change_Stage(state_class.server.mario.Stage)
 
     pass
 
