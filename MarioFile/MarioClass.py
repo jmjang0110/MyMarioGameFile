@@ -85,7 +85,7 @@ class Fallingstate:
         elif event == LEFT_UP:
             Mario.velocity += RUN_SPEED_PPS
 
-
+        Mario.GameOverBgm.play()
 
 
     def exit(Mario, event):
@@ -98,7 +98,7 @@ class Fallingstate:
         # frame 업데이트
         # Mario.frame = (Mario.frame + 1) % 3
         # Mario.frame = (Mario.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 8
-        Mario.goUp_just_moment -= game_framework.frame_time * RUN_SPEED_PPS
+        Mario.goUp_just_moment -= game_framework.frame_time * RUN_SPEED_PPS * 0.5
         print('Mario::Fallingstate::do Go Up : ' ,Mario.goUp_just_moment)
 
         Mario.frame = (Mario.frame + FRAMES_PER_ACTION * 0.8 * game_framework.frame_time) % 2
@@ -437,7 +437,7 @@ class JumpState:
         Mario.isJump = True
         Mario.posY = Mario.y
         Mario.Before_State = Mario.myState
-
+        Mario.jumpBgm.play()
         pass
 
     def exit(Mario, event):
@@ -552,9 +552,18 @@ class CMario:
         CMario.fireData = []
         self.Stage_Clear = False
         self.Stage = 1
+
         self.StageBgm = load_music('01 - Super Mario Bros.mp3')
         self.StageBgm.set_volume(64)
-        self.StageBgm.repeat_play()
+
+        self.Stage2Bgm = load_music('06 - Underground.mp3')
+        self.Stage2Bgm.set_volume(64)
+
+        self.jumpBgm = load_music('maro-jump-sound-effect_1.mp3')
+        self.jumpBgm.set_volume(4)
+
+        self.GameOverBgm = load_music('16 - Game Over.mp3')
+        self.GameOverBgm.set_volume(64)
 
         self.image_right = load_image('mario_mainCharacter/mario_right.png')    # 500 x 588
         self.image_left = load_image('mario_mainCharacter/mario_left.png')
@@ -620,6 +629,12 @@ class CMario:
         self.cur_state = IdleState
         self.cur_state.enter(self, None)
 
+    def UpdateBgm(self):
+        if self.Stage == 1:
+            self.StageBgm.repeat_play()
+        elif self.Stage == 2:
+            self.Stage2Bgm.repeat_play()
+
     def get_bb(self):
         # fill here
         return self.x - 20, self.y, self.x + 20, self.y + 50
@@ -665,6 +680,15 @@ class CMario:
                     break
         if self.Stage == 2:
             for tile in MapManager.MapTileManager.mapTile_Data_2[0]:
+                self.collidePlane = state_class.collision.collide_plane(tile, self)
+                if self.collidePlane == PLANE.NONE:
+                    self.fallCheck = True
+
+                elif self.collidePlane == PLANE.UP:
+                    self.fallCheck = False
+                    break
+        if self.Stage == 3:
+            for tile in MapManager.MapTileManager.mapTile_Data_3[0]:
                 self.collidePlane = state_class.collision.collide_plane(tile, self)
                 if self.collidePlane == PLANE.NONE:
                     self.fallCheck = True
@@ -777,6 +801,18 @@ class CMario:
             if self.Stage == 2:
                 # 마리오가 맵 타일과 부딪 치는
                 for tile in MapManager.MapTileManager.mapTile_Data_2[0]:
+                    self.collidePlane = state_class.collision.collide_plane(tile, self)
+                    if self.collidePlane == PLANE.NONE:
+                        self.fallCheck = True
+                    elif self.collidePlane == PLANE.UP:
+                        self.fallCheck = False
+                        break
+
+                if self.fallCheck == True:
+                    self.add_event(FALLING)
+            if self.Stage == 3:
+                # 마리오가 맵 타일과 부딪 치는
+                for tile in MapManager.MapTileManager.mapTile_Data_3[0]:
                     self.collidePlane = state_class.collision.collide_plane(tile, self)
                     if self.collidePlane == PLANE.NONE:
                         self.fallCheck = True

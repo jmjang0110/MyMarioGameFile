@@ -22,6 +22,7 @@ from Monster_class.Monster4 import *
 from MapManagerFile import *
 from MapManagerFile.mapTileClass import *
 from MonsterManager import *
+from zombie import *
 
 import state_class.server
 name = "MainState"
@@ -104,6 +105,21 @@ def collideCheck():
         # 1층 에서의 충돌 체크
         collideCheck_withFire()
         EraseMonster()
+    elif state_class.server.mario.Stage == 3:
+        # 아이템 박스와 충돌 체크
+        idx = 0
+        for num in MapManager.MapTileManager.MapData_3[2]:
+             # 아이템과 충돌 체크
+             if num == 3 or num == 5:
+                if collide(state_class.server.mario, MapManager.MapTileManager.mapTile_Data_3[2][idx]):
+                    MapManager.MapTileManager.mapTile_Data_3[2][idx].collidenum -= 1
+                    state_class.server.mario.jumpCollide_item()
+                idx += 1
+
+        # 마리오의 Fire 와 몬스터와의 충돌 체크
+        # 1층 에서의 충돌 체크
+        collideCheck_withFire()
+        EraseMonster()
     pass
 
 def lateUpdate():
@@ -145,11 +161,14 @@ def enter():
 
 
     if start == 1:
-
         MyStage = 1
-    else :
+    elif start == 2:
         MyStage = 2
-    start = 2
+    else :
+        MyStage = 3
+
+    start += 1
+
 
 
     game_world.clear()
@@ -175,6 +194,8 @@ def enter():
         state_class.server.mapManager.create_tileSpot_Stage1()
     if state_class.server.mario.Stage == 2:
         state_class.server.mapManager.create_tileSpot_Stage2()
+    if state_class.server.mario.Stage == 3:
+        state_class.server.mapManager.create_tileSpot_Stage3()
     # state_class.server.mapManager.create_tileSpot_Stage3()
 
     # M O N S T E R
@@ -184,7 +205,11 @@ def enter():
         state_class.server.monsterManager.create_Monster_Stage1()
     if state_class.server.mario.Stage == 2:
         state_class.server.monsterManager.Change_Stage(state_class.server.mario.Stage)
+    if state_class.server.mario.Stage == 3:
+        state_class.server.monsterManager.Change_Stage(state_class.server.mario.Stage)
         # state_class.server.monsterManager.create_Monster_Stage2()
+
+    state_class.server.mario.UpdateBgm()
 
     # A D D _ GAME WORLD
     game_world.add_object(state_class.server.backGround, 0)
@@ -197,7 +222,8 @@ def enter():
     # game_world.add_object(monster4, 1)
     game_world.add_object(state_class.server.mario, 1)
 
-
+    state_class.server.zombie = Zombie()
+    game_world.add_object(state_class.server.zombie, 1)
 
     # state_class.server.backGround.ChangeStage(state_class.server.mario.Stage)
     # state_class.server.monsterManager.Change_Stage(state_class.server.mario.Stage)

@@ -16,6 +16,7 @@ class CBackGround:
     def __init__(self):
         self.BackGround_Stage1 = load_image('MarioFile/stage1.png')
         self.BackGround_Stage2 = load_image('MarioFile/stage2.png')
+        self.BackGround_Stage3 = load_image('MarioFile/Stage3Moon.jpg')
 
         self.BackGround_1 = self.BackGround_Stage1
         self.BackGround_1_Pivot_x = WINDOW_SIZE_WIDTH / 2
@@ -53,14 +54,34 @@ class CBackGround:
             self.BackGround_1_Pivot_x = WINDOW_SIZE_WIDTH / 2
             self.BackGround_2 = self.BackGround_Stage2
             self.BackGround_2_Pivot_x = WINDOW_SIZE_WIDTH + WINDOW_SIZE_WIDTH / 2
+        elif state_class.server.mario.Stage == 3:
+            self.BackGround_1 = self.BackGround_Stage3
+            self.BackGround_1_Pivot_x = WINDOW_SIZE_WIDTH / 2
+            self.BackGround_2 = self.BackGround_Stage3
+            self.BackGround_2_Pivot_x = WINDOW_SIZE_WIDTH + WINDOW_SIZE_WIDTH / 2
 
 
     def draw(self):
-        self.BackGround_1.clip_draw(10, 60, 600, 385, self.BackGround_1_Pivot_x - self.BackMoveDist,
-                                          WINDOW_SIZE_HEIGHT / 2, WINDOW_SIZE_WIDTH, WINDOW_SIZE_HEIGHT)
+        # 뒷 배경을 출력합니다...
+        if state_class.server.mario.Stage == 1:
+            self.BackGround_1.clip_draw(10, 60, 600, 385, self.BackGround_1_Pivot_x - self.BackMoveDist,
+                                        WINDOW_SIZE_HEIGHT / 2, WINDOW_SIZE_WIDTH, WINDOW_SIZE_HEIGHT)
 
-        self.BackGround_2.clip_draw(10, 60, 600, 385, self.BackGround_2_Pivot_x - self.BackMoveDist,
-                                          WINDOW_SIZE_HEIGHT / 2, WINDOW_SIZE_WIDTH, WINDOW_SIZE_HEIGHT)
+            self.BackGround_2.clip_draw(10, 60, 600, 385, self.BackGround_2_Pivot_x - self.BackMoveDist,
+                                        WINDOW_SIZE_HEIGHT / 2, WINDOW_SIZE_WIDTH, WINDOW_SIZE_HEIGHT)
+        elif state_class.server.mario.Stage == 2:
+            self.BackGround_1.clip_draw(10, 60, 600, 385, self.BackGround_1_Pivot_x - self.BackMoveDist,
+                                        WINDOW_SIZE_HEIGHT / 2, WINDOW_SIZE_WIDTH, WINDOW_SIZE_HEIGHT)
+
+            self.BackGround_2.clip_draw(10, 60, 600, 385, self.BackGround_2_Pivot_x - self.BackMoveDist,
+                                        WINDOW_SIZE_HEIGHT / 2, WINDOW_SIZE_WIDTH, WINDOW_SIZE_HEIGHT)
+        elif state_class.server.mario.Stage == 3:
+            self.BackGround_1.clip_draw(0, 0, 1280, 720, self.BackGround_1_Pivot_x - self.BackMoveDist,
+                                        WINDOW_SIZE_HEIGHT / 2, WINDOW_SIZE_WIDTH, WINDOW_SIZE_HEIGHT)
+
+            self.BackGround_2.clip_draw(0, 0, 1280, 720, self.BackGround_2_Pivot_x - self.BackMoveDist,
+                                        WINDOW_SIZE_HEIGHT / 2, WINDOW_SIZE_WIDTH, WINDOW_SIZE_HEIGHT)
+
 
         if state_class.server.mario.Stage == 1:
             for i in range(len(self.mountains)):
@@ -68,6 +89,9 @@ class CBackGround:
         elif state_class.server.mario.Stage == 2:
             for i in range(len(self.mountains2)):
                 self.mountains2[i].draw()
+        # elif state_class.server.mario.Stage == 3:
+        #     for i in range(len(self.mountains2)):
+        #         self.mountains2[i].draw()
         # print(self.BackGround_1_Pivot_x - self.BackMoveDist)
         # print(self.BackGround_2_Pivot_x - self.BackMoveDist)
         # print('\n')

@@ -93,6 +93,22 @@ class MapTileManager:
         MapTileManager.MapData_2[0] = [1, 1, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 0, 0, 0, 1,
                                      1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 0, 0, 4, 0]
 
+        # ========================================================
+        #                   S T A G E 3
+        # ========================================================
+        # 2 층
+        MapTileManager.MapData_3[1] = [0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0,
+                                       1,
+                                       0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0]
+        # 중간 3 : 코인 , 2 : 초록 하수구
+        MapTileManager.MapData_3[2] = [0, 0, 0, 0, 3, 0, 0, 5, 5, 0, 0, 0, 0, 2, 3, 3, 0, 2, 0, 3, 3, 3, 0, 2, 0, 0, 0,
+                                       0,
+                                       0, 0, 0, 2, 3, 3, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        # 1 층
+        MapTileManager.MapData_3[0] = [1, 1, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 0, 0, 0,
+                                       1,
+                                       1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 0, 0, 4, 0]
+
         pass
 
 
@@ -210,6 +226,63 @@ class MapTileManager:
             self.pivot_y += 200
 
         pass
+
+    def create_tileSpot_Stage3(self):
+
+        self.MapStart_x = 100
+        self.MapStart_y = 25
+
+        self.pivot_x = 0
+        self.pivot_y = 125
+
+        for i in range(ROW - 1):
+            self.pivot_x = 0
+            for j in range(COLUM - 1):
+                if MapTileManager.MapData_3[i][j] == 0:
+                    self.pivot_x += 25
+                elif MapTileManager.MapData_3[i][j] == 1:
+                    self.pivot_x += 100 * MapTileManager.MapData_3[i][j]
+                elif MapTileManager.MapData_3[i][j] == 2:
+                    self.pivot_x += 100
+                elif MapTileManager.MapData_3[i][j] == 3:
+                    self.pivot_x += 50
+                elif MapTileManager.MapData_3[i][j] == 5:
+                    self.pivot_x += 25
+
+                if MapTileManager.MapData_3[i][j] == 1:
+                    MapTileManager.mapTile_Data_3[i][j] = MapTile()
+                    MapTileManager.mapTile_Data_3[i][j].setPivot2(self.pivot_x, self.pivot_y, 1)
+
+                elif MapTileManager.MapData_3[i][j] == 2:
+                    MapTileManager.mapTile_Data_3[i][j] = CGreenSewer()
+                    MapTileManager.mapTile_Data_3[i][j].setPivot2(self.pivot_x, self.pivot_y - 330, 1)
+
+                elif MapTileManager.MapData_3[i][j] == 3:
+                    MapTileManager.mapTile_Data_3[i][j] = ItemClass()
+                    MapTileManager.mapTile_Data_3[i][j].setPivot2(self.pivot_x, self.pivot_y - 150 - 50, 1)
+
+
+                elif MapTileManager.MapData_3[i][j] == 4:
+                    MapTileManager.mapTile_Data_3[i][j] = myCastle()
+                    MapTileManager.mapTile_Data_3[i][j].setPivot2(self.pivot_x, self.pivot_y + 165, 1)
+
+                elif MapTileManager.MapData_3[i][j] == 5:
+                    MapTileManager.mapTile_Data_3[i][j] = ItemClass()
+                    MapTileManager.mapTile_Data_3[i][j].setPivot2(self.pivot_x, self.pivot_y - 30, 1)
+
+                if MapTileManager.MapData_3[i][j] == 0:
+                    self.pivot_x += 25
+                elif MapTileManager.MapData_3[i][j] == 1:
+                    self.pivot_x += 100 * MapTileManager.MapData_3[i][j]
+                elif MapTileManager.MapData_3[i][j] == 2:
+                    self.pivot_x += 100
+                elif MapTileManager.MapData_3[i][j] == 3:
+                    self.pivot_x += 10
+                elif MapTileManager.MapData_3[i][j] == 5:
+                    self.pivot_x += 25
+            self.pivot_y += 200
+
+        pass
     def update_tileSpot(self):
 
         pass
@@ -234,6 +307,12 @@ class MapTileManager:
                 for j in range(COLUM - 1):
                     MapTileManager.mapTile_Data_2[i][j].update_spot_byMarioMove(
                         state_class.server.mario.move_prev_dst * 2.0)
+        if state_class.server.mario.Stage == 3:
+            # print('update tilespot')
+            for i in range(ROW - 1):
+                for j in range(COLUM - 1):
+                    MapTileManager.mapTile_Data_3[i][j].update_spot_byMarioMove(
+                        state_class.server.mario.move_prev_dst * 2.0)
 
     def lateUpdate(self):
         # 마리오 움직임에 따라 타일들을 움직입니다.
@@ -250,6 +329,10 @@ class MapTileManager:
             for j in range(COLUM - 1):
                 if MapTileManager.MapData_2[2][j] == 3 or MapTileManager.MapData_2[2][j] == 5:
                     MapTileManager.mapTile_Data_2[2][j].update()
+        if state_class.server.mario.Stage == 3:
+            for j in range(COLUM - 1):
+                if MapTileManager.MapData_3[2][j] == 3 or MapTileManager.MapData_3[2][j] == 5:
+                    MapTileManager.mapTile_Data_3[2][j].update()
 
         pass
 
@@ -265,6 +348,12 @@ class MapTileManager:
                 for j in range(COLUM - 1):
                     if MapTileManager.MapData_2[i][j] != 0:
                         MapTileManager.mapTile_Data_2[i][j].draw()
+
+        elif state_class.server.mario.Stage == 3:
+            for i in range(ROW - 1):
+                for j in range(COLUM - 1):
+                    if MapTileManager.MapData_3[i][j] != 0:
+                        MapTileManager.mapTile_Data_3[i][j].draw()
 
         pass
 

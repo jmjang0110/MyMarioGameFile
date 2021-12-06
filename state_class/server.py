@@ -1,9 +1,9 @@
 
 
-
 mario = None
 fire = []
 font = None
+zombie = None
 
 mapManager = None
 backGround = None

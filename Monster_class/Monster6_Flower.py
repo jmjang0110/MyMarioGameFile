@@ -30,6 +30,9 @@ class Monster6:
     def __init__(self):
         if Monster6.image == None:
             Monster6.image = load_image('mario_monster/mario_monster_sheet.png')
+
+
+
         self.HP = 1000
         self.FireData = []
         self.FireCount = 0
