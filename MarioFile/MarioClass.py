@@ -101,6 +101,8 @@ class Fallingstate:
         Mario.goUp_just_moment -= game_framework.frame_time * RUN_SPEED_PPS
         print('Mario::Fallingstate::do Go Up : ' ,Mario.goUp_just_moment)
 
+        Mario.frame = (Mario.frame + FRAMES_PER_ACTION * 0.8 * game_framework.frame_time) % 2
+
 
         #     기본적으로 마리오가 아래로 내려간다.
         if Mario.fallCheck == True:
@@ -122,10 +124,12 @@ class Fallingstate:
 
 
     def draw(Mario):
+        if Mario.frame < 1:
             Mario.image_left.clip_draw(0,588 - Mario.image_HEIGHT * 2 + 10, Mario.image_WIDTH,Mario.image_HEIGHT,
                                              Mario.x, Mario.y, 100, 98)
-
-
+        elif 1 <= Mario.frame and Mario.frame <= 2:
+            Mario.image_left.clip_composite_draw(0,588 - Mario.image_HEIGHT * 2 + 10, Mario.image_WIDTH,Mario.image_HEIGHT,0,'h',
+                                             Mario.x - 15, Mario.y, 100, 98)
 
 
 class IdleState:
@@ -546,7 +550,11 @@ class CMario:
 
     def __init__(self):
         CMario.fireData = []
-        self.Stage = 2
+        self.Stage_Clear = False
+        self.Stage = 1
+        self.StageBgm = load_music('01 - Super Mario Bros.mp3')
+        self.StageBgm.set_volume(64)
+        self.StageBgm.repeat_play()
 
         self.image_right = load_image('mario_mainCharacter/mario_right.png')    # 500 x 588
         self.image_left = load_image('mario_mainCharacter/mario_left.png')

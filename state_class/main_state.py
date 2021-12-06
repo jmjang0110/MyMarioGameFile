@@ -26,9 +26,11 @@ from MonsterManager import *
 import state_class.server
 name = "MainState"
 
+import bgmFile
 
 MyStage = 1
 start = 1
+
 
 def MonsterData_Clear():
    CMonsterManager.MonsterData.clear()
@@ -138,16 +140,21 @@ def changeStage(stage):
 
 
 def enter():
+    global Stage1_BGM
     global start , MyStage
 
+
     if start == 1:
+
         MyStage = 1
     else :
         MyStage = 2
     start = 2
 
+
     game_world.clear()
     state_class.server.mario = CMario()
+
     state_class.server.mario.Stage = MyStage
     state_class.server.backGround = CBackGround()
     state_class.server.backGround.ChangeStage(state_class.server.mario.Stage)
@@ -176,7 +183,8 @@ def enter():
     if state_class.server.mario.Stage == 1:
         state_class.server.monsterManager.create_Monster_Stage1()
     if state_class.server.mario.Stage == 2:
-        state_class.server.monsterManager.create_Monster_Stage2()
+        state_class.server.monsterManager.Change_Stage(state_class.server.mario.Stage)
+        # state_class.server.monsterManager.create_Monster_Stage2()
 
     # A D D _ GAME WORLD
     game_world.add_object(state_class.server.backGround, 0)

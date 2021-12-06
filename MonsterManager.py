@@ -56,6 +56,9 @@ class CMonsterManager():
         CMonsterManager.MapData.clear()
         CMonsterManager.MonsterData.clear()
 
+        CMonsterManager.MapData = []
+        CMonsterManager.MonsterData = []
+
 
         if stage == 1:
             CMonsterManager.MapData = MapManager.MapTileManager.MapData_1
@@ -133,6 +136,7 @@ class CMonsterManager():
             for j in range(COLUM - 1):
                 if i == 0 and j == 0:
                     continue
+
                 if CMonsterManager.MapData[i][j] == 1:
                     Monsterindex = random.randint(1, 5)
                     if Monsterindex == 1:
@@ -162,6 +166,8 @@ class CMonsterManager():
                                         MapTileManager.mapTile_Data_2[i][j].Tile_Width_size // 2)
                     if Monsterindex != 5:
                         CMonsterManager.MonsterData.append(monster)
+                        if monster.x == 0 :
+                            print(monster.x)
                         game_world.add_object(monster, 1)
 
                 elif CMonsterManager.MapData[i][j] == 2:
