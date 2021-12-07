@@ -209,7 +209,6 @@ def enter():
         state_class.server.monsterManager.Change_Stage(state_class.server.mario.Stage)
         # state_class.server.monsterManager.create_Monster_Stage2()
 
-    state_class.server.mario.UpdateBgm()
 
     # A D D _ GAME WORLD
     game_world.add_object(state_class.server.backGround, 0)

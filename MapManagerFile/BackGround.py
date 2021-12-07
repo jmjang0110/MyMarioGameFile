@@ -18,6 +18,17 @@ class CBackGround:
         self.BackGround_Stage2 = load_image('MarioFile/stage2.png')
         self.BackGround_Stage3 = load_image('MarioFile/Stage3Moon.jpg')
 
+        self.StageBgm = load_music('01 - Super Mario Bros.mp3')
+        self.StageBgm.set_volume(64)
+
+        self.Stage2Bgm = load_music('06 - Underground.mp3')
+        self.Stage2Bgm.set_volume(64)
+
+        self.Stage3Bgm = load_music('11 Snow Mountain.mp3')
+        self.Stage3Bgm.set_volume(64)
+
+
+
         self.BackGround_1 = self.BackGround_Stage1
         self.BackGround_1_Pivot_x = WINDOW_SIZE_WIDTH / 2
 
@@ -43,6 +54,15 @@ class CBackGround:
 
         pass
 
+    def UpdateBgm(self):
+        if state_class.server.mario.Stage == 1:
+            self.StageBgm.repeat_play()
+        elif state_class.server.mario.Stage == 2:
+            self.Stage2Bgm.repeat_play()
+        elif state_class.server.mario.Stage == 3:
+            self.Stage3Bgm.repeat_play()
+            
+
     def ChangeStage(self, stage):
         if state_class.server.mario.Stage == 1:
             self.BackGround_1 = self.BackGround_Stage1
@@ -60,6 +80,7 @@ class CBackGround:
             self.BackGround_2 = self.BackGround_Stage3
             self.BackGround_2_Pivot_x = WINDOW_SIZE_WIDTH + WINDOW_SIZE_WIDTH / 2
 
+        self.UpdateBgm()
 
     def draw(self):
         # 뒷 배경을 출력합니다...

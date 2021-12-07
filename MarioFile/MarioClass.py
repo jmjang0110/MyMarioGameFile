@@ -437,7 +437,7 @@ class JumpState:
         Mario.isJump = True
         Mario.posY = Mario.y
         Mario.Before_State = Mario.myState
-        Mario.jumpBgm.play()
+        # Mario.jumpBgm.play()
         pass
 
     def exit(Mario, event):
@@ -553,13 +553,11 @@ class CMario:
         self.Stage_Clear = False
         self.Stage = 1
 
-        self.StageBgm = load_music('01 - Super Mario Bros.mp3')
-        self.StageBgm.set_volume(64)
 
-        self.Stage2Bgm = load_music('06 - Underground.mp3')
-        self.Stage2Bgm.set_volume(64)
 
-        self.jumpBgm = load_music('maro-jump-sound-effect_1.mp3')
+        self.jumpBgm = load_wav('maro-jump-sound-effect_1.wav')
+        # pickup.wav
+        # self.jumpBgm = load_wav('pickup.wav')
         self.jumpBgm.set_volume(4)
 
         self.GameOverBgm = load_music('16 - Game Over.mp3')
@@ -629,11 +627,7 @@ class CMario:
         self.cur_state = IdleState
         self.cur_state.enter(self, None)
 
-    def UpdateBgm(self):
-        if self.Stage == 1:
-            self.StageBgm.repeat_play()
-        elif self.Stage == 2:
-            self.Stage2Bgm.repeat_play()
+
 
     def get_bb(self):
         # fill here
@@ -699,6 +693,9 @@ class CMario:
 
         pass
 
+    def jumpbgmPlay(self):
+        self.jumpBgm.play()
+        pass
 
 
 
@@ -712,6 +709,7 @@ class CMario:
         if (event.type, event.key) in key_event_table:
             key_event = key_event_table[(event.type, event.key)]
             if key_event == JUMP_UP:
+                self.jumpbgmPlay()
                 Before_JumpState = self.cur_state
                 print("Before : ", str(Before_JumpState))
 
