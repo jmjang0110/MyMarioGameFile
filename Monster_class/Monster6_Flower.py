@@ -162,16 +162,12 @@ class Monster6:
 
         mFire = MonsterFire(self.x, self.y, -1 * 3)
 
-
         if self.FireCount > 3:
             self.FireCount = 0
             self.FireData.clear()
         self.FireCount += 1
 
         self.FireData.append(mFire)
-
-
-
         game_world.add_object(mFire, 1)
 
 

@@ -61,7 +61,7 @@ class CBackGround:
             self.Stage2Bgm.repeat_play()
         elif state_class.server.mario.Stage == 3:
             self.Stage3Bgm.repeat_play()
-            
+
 
     def ChangeStage(self, stage):
         if state_class.server.mario.Stage == 1:

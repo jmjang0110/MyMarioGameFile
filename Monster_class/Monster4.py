@@ -54,10 +54,12 @@ class Monster4:
         pass
 
     def DieCheck(self):
+        pass
         if self.HP <= 0:
             return True
         else:
             return False
+        pass
     def HPDown(self, Attack):
         self.HP -= Attack
 

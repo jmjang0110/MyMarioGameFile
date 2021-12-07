@@ -45,11 +45,31 @@ def EraseMonster():
             del CMonsterManager.MonsterData[i]
         break
 
+def collideCheck_WithMario_Monsters():
+    for i in range(len(CMonsterManager.MonsterData)):
+        if collide(state_class.server.mario, CMonsterManager.MonsterData[i]) :
+            if CMonsterManager.MonsterData[i].DieCheck() == False:
+                state_class.server.mario.fallCheck = True
+
+
+
 def collideCheck_withFire():
+
+
+    for i in range(len(state_class.server.fire)):
+        if state_class.server.zombie != None:
+            if collide(state_class.server.fire[i], state_class.server.zombie):
+                state_class.server.zombie.HPDown(state_class.server.fire[i].Attack)
+                state_class.server.zombie.EraseMe()
 
     # print('fire Num : ' ,len(state_class.server.fire))
     for k in range(len(CMonsterManager.MonsterData)):
         for  i in range(len(state_class.server.fire)):
+
+            if state_class.server.zombie != None:
+                if collide(state_class.server.fire[i], state_class.server.zombie):
+                    state_class.server.zombie.HPDown(state_class.server.fire[i].Attack)
+                    state_class.server.zombie.EraseMe()
 
             if collide(state_class.server.fire[i], CMonsterManager.MonsterData[k]):
                 print("COLLISION")
@@ -71,6 +91,7 @@ def collideCheck_withFire():
                             del CMonsterManager.MonsterData[k]
                             break
 
+
                 break
     pass
 
@@ -88,6 +109,7 @@ def collideCheck():
 
         # 마리오의 Fire 와 몬스터와의 충돌 체크
         # 1층 에서의 충돌 체크
+        collideCheck_WithMario_Monsters()
         collideCheck_withFire()
         EraseMonster()
     elif state_class.server.mario.Stage == 2:
@@ -103,6 +125,7 @@ def collideCheck():
 
         # 마리오의 Fire 와 몬스터와의 충돌 체크
         # 1층 에서의 충돌 체크
+        collideCheck_WithMario_Monsters()
         collideCheck_withFire()
         EraseMonster()
     elif state_class.server.mario.Stage == 3:
@@ -118,6 +141,7 @@ def collideCheck():
 
         # 마리오의 Fire 와 몬스터와의 충돌 체크
         # 1층 에서의 충돌 체크
+        collideCheck_WithMario_Monsters()
         collideCheck_withFire()
         EraseMonster()
     pass
@@ -221,8 +245,7 @@ def enter():
     # game_world.add_object(monster4, 1)
     game_world.add_object(state_class.server.mario, 1)
 
-    state_class.server.zombie = Zombie()
-    game_world.add_object(state_class.server.zombie, 1)
+
 
     # state_class.server.backGround.ChangeStage(state_class.server.mario.Stage)
     # state_class.server.monsterManager.Change_Stage(state_class.server.mario.Stage)

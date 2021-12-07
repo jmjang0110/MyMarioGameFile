@@ -12,6 +12,13 @@ from state_class.main_state import *
 from state_class.server import *
 import state_class.collision
 
+from state_class.server import *
+from zombie import *
+
+Stage1_Boss = False
+Stage2_Boss = False
+Stage3_Boss = False
+
 
 
 # fill expressions correctly
@@ -664,31 +671,61 @@ class CMario:
             pass
 
         if self.Stage == 1:
+            idx =  -1
             for tile in MapManager.MapTileManager.mapTile_Data_1[0]:
+                idx += 1
                 self.collidePlane = state_class.collision.collide_plane(tile, self)
                 if self.collidePlane == PLANE.NONE:
                     self.fallCheck = True
 
+
                 elif self.collidePlane == PLANE.UP:
                     self.fallCheck = False
+                    if idx >= 0 and idx <= len(MapManager.MapTileManager.mapTile_Data_1[0] ):
+                        if MapManager.MapTileManager.MapData_1[0][idx] == 4:
+                            global Stage1_Boss
+                            if Stage1_Boss == False:
+                                state_class.server.zombie = Zombie()
+                                game_world.add_object(state_class.server.zombie, 1)
+                                Stage1_Boss = True
+
                     break
         if self.Stage == 2:
+            idx = -1
             for tile in MapManager.MapTileManager.mapTile_Data_2[0]:
+                idx += 1
                 self.collidePlane = state_class.collision.collide_plane(tile, self)
                 if self.collidePlane == PLANE.NONE:
                     self.fallCheck = True
 
                 elif self.collidePlane == PLANE.UP:
                     self.fallCheck = False
+                    if idx >= 0 and idx <= len(MapManager.MapTileManager.mapTile_Data_2[0]):
+                        if MapManager.MapTileManager.MapData_2[0][idx] == 4:
+                            global Stage2_Boss
+                            if Stage2_Boss == False:
+                                state_class.server.zombie = Zombie()
+                                game_world.add_object(state_class.server.zombie, 1)
+                                Stage2_Boss = True
                     break
         if self.Stage == 3:
+            idx = -1
             for tile in MapManager.MapTileManager.mapTile_Data_3[0]:
+                idx += 1
                 self.collidePlane = state_class.collision.collide_plane(tile, self)
+
                 if self.collidePlane == PLANE.NONE:
                     self.fallCheck = True
 
                 elif self.collidePlane == PLANE.UP:
                     self.fallCheck = False
+                    if idx >= 0 and idx <= len(MapManager.MapTileManager.mapTile_Data_3[0]):
+                        if MapManager.MapTileManager.MapData_3[0][idx] == 4:
+                            global Stage3_Boss
+                            if Stage3_Boss == False:
+                                state_class.server.zombie = Zombie()
+                                game_world.add_object(state_class.server.zombie, 1)
+                                Stage3_Boss = True
                     break
 
         pass

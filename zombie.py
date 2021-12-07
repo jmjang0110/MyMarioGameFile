@@ -7,6 +7,8 @@ from myEnum import *
 
 from state_class import *
 from pico2d import *
+from Monster_class.MonsterFire2 import *
+
 
 from state_class.server import *
 
@@ -45,11 +47,8 @@ class Zombie:
         self.patrol_points = []
         for p in positions:
             self.patrol_points.append((p[0], WINDOW_SIZE_HEIGHT - p[1])) # pico 2d 상의 좌표계 를 이용하도록 변경
-
-
-
-
         pass
+
 
 
     def __init__(self):
@@ -67,7 +66,22 @@ class Zombie:
         self.frame = 0
         self.build_behavior_tree()
 
+        self.HP = 1000
+        self.FireData = []
+        self.FireCount = 0
 
+        self.fireTimer = 0.0
+        self.fireTimer_Limit = 5.0
+        self.firenum = 3
+
+    def EraseMe(self):
+        if self.HP <= 0:
+            game_world.remove_object(self)
+
+        pass
+
+    def HPDown(self, Attack):
+        self.HP -= Attack
 
 
     def wander(self):
@@ -109,7 +123,7 @@ class Zombie:
         # fill here
         distance2 = (state_class.server.mario.x - self.x)**2 + (state_class.server.mario.y - self.y)**2
         # 좀비 입장에서 보이가 10 미터 이내에 있으면 발견한 것으로 한다.
-        if distance2 <= (PIXEL_PER_METER* 10)**2:
+        if distance2 <= (PIXEL_PER_METER* 20)**2:
             print('find player success')
             return BehaviorTree.SUCCESS
         else:
@@ -123,6 +137,8 @@ class Zombie:
         # fill here
         self.speed = RUN_SPEED_PPS
         self.dir = math.atan2(state_class.server.mario.y - self.y , state_class.server.mario.x - self.x)
+        self.fire()
+
         return BehaviorTree.SUCCESS # 일단 소년 쪽으로 움직이기만 해도 SUCCESS
 
         pass
@@ -197,8 +213,8 @@ class Zombie:
         self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % FRAMES_PER_ACTION
         self.x += self.speed * math.cos(self.dir) * game_framework.frame_time
         self.y += self.speed * math.sin(self.dir) * game_framework.frame_time
-        self.x = clamp(50, self.x, WINDOW_SIZE_WIDTH - 50)
-        self.y = clamp(50, self.y, WINDOW_SIZE_HEIGHT  - 50)
+        self.x = clamp(WINDOW_SIZE_WIDTH - 200, self.x, WINDOW_SIZE_WIDTH - 50)
+        self.y = clamp(250 , self.y, WINDOW_SIZE_HEIGHT  - 50)
 
 
     def draw(self):
@@ -215,4 +231,31 @@ class Zombie:
 
     def handle_event(self, event):
         pass
+
+    def fire(self):
+        # self.FireCount += 1 * game_framework.frame_time
+        self.fireTimer += FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time
+
+        if self.fireTimer >= self.fireTimer_Limit:
+            self.fireTimer_Limit = 1.0
+            self.fireTimer = 0.0
+            self.firenum -= 1
+
+            if self.firenum <= -1:
+                self.fireTimer_Limit = 30.0
+                self.firenum = 1
+                self.fireTimer = 0.0
+
+            mFire = MonsterFireBOSS(self.x, self.y, -1 * 3)
+            mFire.setDir(self.dir)
+            self.FireData.append(mFire)
+            game_world.add_object(mFire, 1)
+
+
+        if self.FireCount >= 10:
+            self.FireCount = 0
+
+        pass
+
+
 

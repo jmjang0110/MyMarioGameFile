@@ -18,12 +18,12 @@ ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
 FRAMES_PER_ACTION = 100
 
 
-class MonsterFire:
+class MonsterFireBOSS:
     image = None
 
     def __init__(self, x = 400, y = 300, velocity = -1):
-        if MonsterFire.image == None:
-            MonsterFire.image = load_image('mario_monster/mario_monster_sheet.png')
+        if MonsterFireBOSS.image == None:
+            MonsterFireBOSS.image = load_image('mario_monster/Monster_Sheet.png')
         self.x, self.y, self.velocity = x, y, RUN_SPEED_PPS * velocity
 
         self.myState = True
@@ -31,8 +31,8 @@ class MonsterFire:
         # 점프를 위한 변수
         self.Start_y = 150
 
-        self.image_Width = 20
-        self.image_Height = 20
+        self.image_Width = 100
+        self.image_Height = 100
         self.frame = 0
 
         self.isJump = False
@@ -64,8 +64,8 @@ class MonsterFire:
 
     def draw(self):
         angle = math.atan2(self.y , self.x)
-        self.image.clip_composite_draw(105 + int(self.frame) * 21 ,1753,
-                                       self.image_Width,self.image_Height,0,'none',self.x,self.y,30,30)
+        self.image.clip_composite_draw(380  ,0,
+                                       self.image_Width,self.image_Height,0,'none',self.x,self.y,50,50)
 
         draw_rectangle(*self.get_bb())
 

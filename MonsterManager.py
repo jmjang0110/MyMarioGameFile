@@ -56,6 +56,7 @@ class CMonsterManager():
         CMonsterManager.MapData.clear()
         CMonsterManager.MonsterData.clear()
 
+        state_class.server.zombie = None
         CMonsterManager.MapData = []
         CMonsterManager.MonsterData = []
 
