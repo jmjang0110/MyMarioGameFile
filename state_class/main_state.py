@@ -137,7 +137,7 @@ def collideCheck():
 
         # 마리오의 Fire 와 몬스터와의 충돌 체크
         # 1층 에서의 충돌 체크
-        collideCheck_WithMario_Monsters()
+        #collideCheck_WithMario_Monsters()
         collideCheck_withFire()
         EraseMonster()
     elif state_class.server.mario.Stage == 3:
@@ -153,7 +153,7 @@ def collideCheck():
 
         # 마리오의 Fire 와 몬스터와의 충돌 체크
         # 1층 에서의 충돌 체크
-        collideCheck_WithMario_Monsters()
+        #collideCheck_WithMario_Monsters()
         collideCheck_withFire()
         EraseMonster()
     pass

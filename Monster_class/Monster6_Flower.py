@@ -155,7 +155,7 @@ class Monster6:
             self.image.clip_composite_draw(205 + int(self.frame)  * 43, 1743, self.width, self.height,
                 0 , 'h', self.x, self.y, 50,60)
 
-        draw_rectangle(*self.get_bb())
+        #draw_rectangle(*self.get_bb())
 
     pass
     def fire(self):

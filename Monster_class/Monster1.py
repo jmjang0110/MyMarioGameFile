@@ -130,7 +130,7 @@ class Monster1:
     def draw(self):
         if self.enable_Show == False:
             return
-        draw_rectangle(*self.get_bb())
+        #draw_rectangle(*self.get_bb())
 
         if state_class.server.mario.Stage == 1:
             if self.velocity <= -1:

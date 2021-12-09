@@ -68,4 +68,4 @@ class CGreenSewer:
         elif self.tileLength == 2:
             self.mapTileImage.clip_draw(15, 448 - self.image_HEIGHT,self.image_WIDTH, self.image_HEIGHT,
                                         self.x,self.y ,self.Tile_Width_size * 2,self.Tile_Height_size)
-        draw_rectangle(*self.get_bb())
+        #draw_rectangle(*self.get_bb())

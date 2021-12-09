@@ -65,7 +65,7 @@ class Fire:
         angle = math.atan2(self.y , self.x)
         self.image.clip_composite_draw(0,int(self.frame) * 30,self.image_Width,self.image_Height,angle - 60,'none',self.x,self.y,50,50)
 
-        draw_rectangle(*self.get_bb())
+        #draw_rectangle(*self.get_bb())
 
     def update(self):
         global marioInfo

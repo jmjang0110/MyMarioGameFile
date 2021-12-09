@@ -149,7 +149,7 @@ class Monster2:
                     0 , 'h', self.x, self.y, self.width+50, self.height+50)
 
 
-        draw_rectangle(*self.get_bb())
+        #draw_rectangle(*self.get_bb())
 
 
     pass

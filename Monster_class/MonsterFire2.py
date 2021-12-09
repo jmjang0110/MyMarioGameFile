@@ -67,7 +67,7 @@ class MonsterFireBOSS:
         self.image.clip_composite_draw(380  ,0,
                                        self.image_Width,self.image_Height,0,'none',self.x,self.y,50,50)
 
-        draw_rectangle(*self.get_bb())
+        #draw_rectangle(*self.get_bb())
 
     def lateUpdate(self):
 

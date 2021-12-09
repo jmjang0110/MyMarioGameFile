@@ -82,7 +82,7 @@ class ItemClass:
 
     def draw(self):
 
-        self.font.draw(self.x- 20, self.y + 50, 'c:%d' %self.collidenum, (255, 0, 0))
+        #self.font.draw(self.x- 20, self.y + 50, 'c:%d' %self.collidenum, (255, 0, 0))
         # print(self.tileLength)
         if self.tileLength == 1:
             self.itemImage.clip_draw(self.image_WIDTH * self.ChangeColor, 128 - self.image_HEIGHT,self.image_WIDTH, self.image_HEIGHT,
@@ -93,4 +93,4 @@ class ItemClass:
 
 
 
-        draw_rectangle(*self.get_bb())
+       # draw_rectangle(*self.get_bb())

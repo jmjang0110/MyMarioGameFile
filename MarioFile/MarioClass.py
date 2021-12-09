@@ -763,12 +763,12 @@ class CMario:
 
     def draw(self):
         # fill here
-        draw_rectangle(*self.get_bb())
+        # draw_rectangle(*self.get_bb())
         # 마리오를 출력
         self.cur_state.draw(self)
 
         # 마리오 플레이 월드 상태 출력
-        self.font.draw(self.x - 60, self.y + 50, '(Time: %3.2f)' % get_time(), (255, 255, 0))
+       # self.font.draw(self.x - 60, self.y + 50, '(Time: %3.2f)' % get_time(), (255, 255, 0))
         self.font.draw(100, WINDOW_SIZE_HEIGHT - 20, 'WORLD : STAGE %d' % self.Stage, (255,255,255))
         self.font.draw(100 + 200, WINDOW_SIZE_HEIGHT - 20, 'x : %2d' % self.cointPoint, (255, 255, 255))
         self.font.draw(100 + 400, WINDOW_SIZE_HEIGHT - 20, 'TIME : %3.2f' % get_time(), (255, 255, 255))

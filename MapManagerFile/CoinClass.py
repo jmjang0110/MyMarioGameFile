@@ -114,4 +114,4 @@ class CCoinClass:
         #     CCoinClass.itemImage.clip_draw(1, 96, 15, 16, self.x , self.y + 25, 50, 50)
         self.font.draw(self.x - 20, self.y - 50, 'p:%d' % self.coinPoint, (255, 0, 0))
         CCoinClass.itemImage.clip_draw(self.image_WIDTH * int(self.frame),  self.image_Height_Start, self.image_WIDTH, self.image_HEIGHT, self.x, self.y + 25, 50, 50)
-        draw_rectangle(*self.get_bb())
+        #draw_rectangle(*self.get_bb())

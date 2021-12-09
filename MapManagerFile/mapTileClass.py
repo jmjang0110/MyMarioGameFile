@@ -86,7 +86,7 @@ class MapTile:
             elif self.tileLength == 2:
                 self.mapTileImage.clip_draw(15, 448 - self.image_HEIGHT, self.image_WIDTH, self.image_HEIGHT,
                                             self.x, self.y, self.Tile_Width_size * 2, self.Tile_Height_size)
-            draw_rectangle(*self.get_bb())
+            #draw_rectangle(*self.get_bb())
 
         elif state_class.server.mario.Stage == 2:
             # print(self.tileLength)
@@ -96,7 +96,7 @@ class MapTile:
             elif self.tileLength == 2:
                 self.mapTileImage.clip_draw(15, 448 - self.image_HEIGHT, self.image_WIDTH, self.image_HEIGHT,
                                             self.x, self.y, self.Tile_Width_size * 2, self.Tile_Height_size)
-            draw_rectangle(*self.get_bb())
+            #draw_rectangle(*self.get_bb())
         elif state_class.server.mario.Stage == 3:
             # print(self.tileLength)
             if self.tileLength == 1:
@@ -105,4 +105,4 @@ class MapTile:
             elif self.tileLength == 2:
                 self.mapTileImage3.clip_draw(49, 140, self.image_WIDTH, self.image_HEIGHT,
                                             self.x, self.y, self.Tile_Width_size * 2, self.Tile_Height_size)
-            draw_rectangle(*self.get_bb())
+           # draw_rectangle(*self.get_bb())
