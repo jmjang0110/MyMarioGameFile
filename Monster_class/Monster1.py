@@ -1,4 +1,6 @@
 from pico2d import *
+
+import state_class.server
 from myEnum import *
 import random
 import game_framework
@@ -9,7 +11,7 @@ import game_world
 # fill expressions correctly
 PIXEL_PER_METER = (10.0 / 0.3) # 10 pixel 30 cm
 # R U N
-RUN_SPEED_KMPH = 13.0 # km / Hour
+RUN_SPEED_KMPH = 10.0 # km / Hour
 RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0) # km -> m / second
 RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0) # M / second
 # 픽셀 단위의 속도가 구해진다.
@@ -23,11 +25,12 @@ FRAMES_PER_ACTION = 8 # 8장 프레임
 
 class Monster1:
     image = None
+    image2 = None
 
     def __init__(self):
         if Monster1.image == None:
             Monster1.image = load_image('mario_monster/m_Monster1.png')
-
+            Monster1.image2 = load_image('mario_monster/Monster_Sheet.png')
         self.x = random.randint(10, 200)
         self.y = 120
 
@@ -97,10 +100,12 @@ class Monster1:
     def update(self):
         if self.enable_Show == False:
             return
-
-        self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME
-                       * game_framework.frame_time) % 4
-
+        if state_class.server.mario.Stage == 1:
+            self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME
+                           * game_framework.frame_time) % 4
+        if state_class.server.mario.Stage == 2:
+            self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME
+                           * game_framework.frame_time) % 6
         self.x += self.velocity * game_framework.frame_time
         # self.x = clamp(25, self.x, WINDOW_SIZE_WIDTH - 25)
 
@@ -127,12 +132,17 @@ class Monster1:
             return
         draw_rectangle(*self.get_bb())
 
-        if self.velocity <= -1:
-            self.image.clip_draw(int(self.frame)  * 62, 0, self.width ,self.height,
-                    self.x, self.y)
-        else:
-            self.image.clip_composite_draw(int(self.frame) * 62, 0, self.width, self.height,\
-                0 , 'h', self.x, self.y, self.width, self.height)
+        if state_class.server.mario.Stage == 1:
+            if self.velocity <= -1:
+                self.image.clip_draw(int(self.frame)  * 62, 0, self.width ,self.height,
+                        self.x, self.y)
+            else:
+                self.image.clip_composite_draw(int(self.frame) * 62, 0, self.width, self.height,\
+                    0 , 'h', self.x, self.y, self.width, self.height)
+        if state_class.server.mario.Stage == 2:
+                self.image2.clip_draw(375 + int(self.frame) * 40, 105, 40, 80,
+                                             self.x, self.y)
+
 
 
 

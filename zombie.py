@@ -2,6 +2,9 @@ import random
 import math
 import game_framework
 import state_class.server
+import state_class.title_state
+import state_class.main_state
+
 from BehaviorTree import BehaviorTree, SelectorNode, SequenceNode, LeafNode
 from myEnum import *
 
@@ -36,7 +39,8 @@ class Zombie:
         if Zombie.images == None:
             Zombie.images = {}
             for name in animation_names:
-                Zombie.images[name] = [load_image("./zombiefiles/female/"+ name + " (%d)" % i + ".png") for i in range(1, 11)]
+                Zombie.images = load_image('mario_monster/Monster_Sheet.png')
+                # Zombie.images[name] = [load_image("./zombiefiles/female/"+ name + " (%d)" % i + ".png") for i in range(1, 11)]
 
 
     def prepare_patrol_points(self):
@@ -74,9 +78,13 @@ class Zombie:
         self.fireTimer_Limit = 5.0
         self.firenum = 3
 
+        self.image_Width = 100
+        self.image_Height = 100
     def EraseMe(self):
         if self.HP <= 0:
+            state_class.main_state.CheckChangeStage = True
             game_world.remove_object(self)
+            game_framework.change_state(state_class.title_state)
 
         pass
 
@@ -218,17 +226,19 @@ class Zombie:
 
 
     def draw(self):
-        if math.cos(self.dir) < 0:
-            if self.speed == 0:
-                Zombie.images['Idle'][int(self.frame)].composite_draw(0, 'h', self.x, self.y, 100, 100)
-            else:
-                Zombie.images['Walk'][int(self.frame)].composite_draw(0, 'h', self.x, self.y, 100, 100)
-        else:
-            if self.speed == 0:
-                Zombie.images['Idle'][int(self.frame)].draw(self.x, self.y, 100, 100)
-            else:
-                Zombie.images['Walk'][int(self.frame)].draw(self.x, self.y, 100, 100)
-
+        # if math.cos(self.dir) < 0:
+        #     if self.speed == 0:
+        #         Zombie.images['Idle'][int(self.frame)].composite_draw(0, 'h', self.x, self.y, 100, 100)
+        #     else:
+        #         Zombie.images['Walk'][int(self.frame)].composite_draw(0, 'h', self.x, self.y, 100, 100)
+        # else:
+        #     if self.speed == 0:
+        #         Zombie.images['Idle'][int(self.frame)].draw(self.x, self.y, 100, 100)
+        #     else:
+        #         Zombie.images['Walk'][int(self.frame)].draw(self.x, self.y, 100, 100)
+        angle = math.atan2(self.y, self.x)
+        Zombie.images.clip_composite_draw(380, 0,
+                                       self.image_Width - 10, self.image_Height, math.radians(angle), 'none', self.x, self.y, 100, 100)
     def handle_event(self, event):
         pass
 

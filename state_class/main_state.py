@@ -31,6 +31,14 @@ import bgmFile
 
 MyStage = 1
 start = 1
+CheckChangeStage = False
+
+def ChangeStage_test():
+    global MyStage, start , CheckChangeStage
+    if CheckChangeStage == True:
+        start += 1
+        CheckChangeStage = False
+
 
 
 def MonsterData_Clear():
@@ -60,7 +68,11 @@ def collideCheck_withFire():
         if state_class.server.zombie != None:
             if collide(state_class.server.fire[i], state_class.server.zombie):
                 state_class.server.zombie.HPDown(state_class.server.fire[i].Attack)
+                state_class.server.fire[i].EraseMe()
+                del state_class.server.fire[i]
                 state_class.server.zombie.EraseMe()
+                break
+
 
     # print('fire Num : ' ,len(state_class.server.fire))
     for k in range(len(CMonsterManager.MonsterData)):
@@ -109,7 +121,7 @@ def collideCheck():
 
         # 마리오의 Fire 와 몬스터와의 충돌 체크
         # 1층 에서의 충돌 체크
-        collideCheck_WithMario_Monsters()
+        # collideCheck_WithMario_Monsters()
         collideCheck_withFire()
         EraseMonster()
     elif state_class.server.mario.Stage == 2:
@@ -183,6 +195,7 @@ def enter():
     global Stage1_BGM
     global start , MyStage
 
+    ChangeStage_test()
 
     if start == 1:
         MyStage = 1
@@ -191,7 +204,7 @@ def enter():
     else :
         MyStage = 3
 
-    start += 1
+
 
 
 
