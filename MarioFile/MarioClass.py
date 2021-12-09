@@ -567,6 +567,11 @@ class CMario:
         # self.jumpBgm = load_wav('pickup.wav')
         self.jumpBgm.set_volume(4)
 
+        self.AttackBgm = load_wav('Attack.wav')
+        # pickup.wav
+        # self.jumpBgm = load_wav('pickup.wav')
+        self.AttackBgm.set_volume(32)
+
         self.GameOverBgm = load_music('16 - Game Over.mp3')
         self.GameOverBgm.set_volume(64)
 
@@ -880,6 +885,8 @@ class CMario:
     def fire(self):
         makefire = Fire(self.x, self.y, self.dst * 3)
         state_class.server.fire.append(makefire)
+        self.AttackBgm.play()
+
         game_world.add_object(makefire,1)
 
 
